@@ -23,7 +23,7 @@ end
 def set_expectation
   content_type 'text/plain'
   expectation = request.body.read
-  File.open(EXPECTATION_DIR + '/1.rb', 'w') do |f|
+  File.open(next_expectation_file, 'w') do |f|
     f.write expectation
   end
 end
@@ -44,4 +44,15 @@ def verify_expectations
   errors = File.read ERROR_FILE
   throw :halt, [400, errors] unless errors.empty?
   'OK'
+end
+
+private
+
+def next_expectation_file
+  files = Dir.glob(EXPECTATION_DIR + '/*.rb').sort
+  if files.empty?
+    "#{EXPECTATION_DIR}/1.rb"
+  else
+    "#{EXPECTATION_DIR}/#{File.basename(files.last, '.rb').to_i + 1}.rb"
+  end
 end
