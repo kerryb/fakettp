@@ -1,10 +1,15 @@
 require 'spec'
 
-def expect
+ERROR_FILE = File.dirname(__FILE__) + '/tmp/errors'
+
+def expect label
   begin
     yield
   rescue Exception => e
-    throw :halt, [400, e.message + "\n\nRequest: #{request.inspect}"]
+    File.open(ERROR_FILE, 'w') do |f|
+      f.puts "Error in #{label}: #{e.message}\n\nRequest: #{request.inspect}"
+    end
+    throw :halt, [500, 'Simulator received unexpected request']
   end
 end
 
@@ -14,4 +19,14 @@ end
 
 def run_expectation
   eval(File.read(File.dirname(__FILE__) + '/sample_expectation.rb'))
+end
+
+def reset_expectations
+  File.open(ERROR_FILE, 'w') {|f|}
+end
+
+def verify_expectations
+  errors = File.read ERROR_FILE
+  throw :halt, [500, errors] unless errors.empty?
+  'OK'
 end

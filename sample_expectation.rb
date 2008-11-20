@@ -1,4 +1,4 @@
-expect do
+expect "Dummy request" do
   request.host.should == 'httpfake.local'
   request.path_info.should == '/foo'
   and_return do

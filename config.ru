@@ -12,6 +12,15 @@ error do
   request.env['sinatra.error'].inspect
 end
 
+post '/reset' do
+  reset_expectations
+end
+
+get '/verify' do
+  content_type 'text/plain'
+  verify_expectations
+end
+
 get '/**' do
   content_type 'text/plain'
   run_expectation
