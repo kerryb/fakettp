@@ -8,8 +8,11 @@ Sinatra::Application.default_options.merge!(
 )
 
 error do
-  content_type 'text/plain'
   request.env['sinatra.error'].inspect
+end
+
+post '/expect' do
+  set_expectation
 end
 
 post '/reset' do
@@ -17,13 +20,13 @@ post '/reset' do
 end
 
 get '/verify' do
-  content_type 'text/plain'
   verify_expectations
 end
 
-get '/**' do
-  content_type 'text/plain'
-  run_expectation
+[:get, :post, :put, :delete, :head].each do |method|
+  send method, '/**' do
+    run_expectation
+  end
 end
 
 run Sinatra.application
