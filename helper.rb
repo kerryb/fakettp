@@ -11,7 +11,7 @@ def expect label
     File.open(ERROR_FILE, 'w') do |f|
       f.puts "Error in #{label}: #{e.message}\n\nRequest: #{request.inspect}"
     end
-    throw :halt, [500, 'Simulator received unexpected request']
+    throw :halt, [500, 'Simulator received mismatched request']
   end
 end
 
@@ -30,7 +30,16 @@ end
 
 def run_expectation
   content_type 'text/plain'
-  eval(File.read(EXPECTATION_DIR + '/1.rb'))
+  files = Dir.glob(EXPECTATION_DIR + '/*.rb').sort
+  if files.empty?
+    File.open(ERROR_FILE, 'w') do |f|
+      f.puts "Received unexpected request: #{request.inspect}"
+    end
+    throw :halt, [500, 'Simulator received unexpected request']
+  end
+  expectation = File.read files.first
+  FileUtils.rm files.first
+  eval(expectation)
 end
 
 def reset_expectations
@@ -41,6 +50,7 @@ end
 
 def verify_expectations
   content_type 'text/plain'
+  check_for_non_received_requests
   errors = File.read ERROR_FILE
   throw :halt, [400, errors] unless errors.empty?
   'OK'
@@ -54,5 +64,14 @@ def next_expectation_file
     "#{EXPECTATION_DIR}/1.rb"
   else
     "#{EXPECTATION_DIR}/#{File.basename(files.last, '.rb').to_i + 1}.rb"
+  end
+end
+
+def check_for_non_received_requests
+  Dir.glob(EXPECTATION_DIR + '/*.rb').each do |f|
+    File.open(ERROR_FILE, 'w') do |f|
+      f.puts "Expected request not received."
+      # TODO: Grab label from expectation (redefine expect?)
+    end
   end
 end
