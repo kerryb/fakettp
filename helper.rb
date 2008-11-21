@@ -42,6 +42,7 @@ def reset_expectations
   content_type 'text/plain'
   FileUtils.rm_f(Dir.glob(EXPECTATION_DIR + '/*'))
   File.open(ERROR_FILE, 'w') {|f|}
+  "Reset OK\n"
 end
 
 def verify_expectations
