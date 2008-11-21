@@ -3,5 +3,5 @@ expect "Dummy request" do
   request.path_info.should == '/foo'
 
   content_type 'text/plain'
-  'All is well'
+  "All is well\n"
 end

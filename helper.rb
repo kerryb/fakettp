@@ -11,7 +11,7 @@ def expect label
     File.open(ERROR_FILE, 'w') do |f|
       f.puts "Error in #{label}: #{e.message}\n\nRequest: #{request.inspect}"
     end
-    throw :halt, [500, 'Simulator received mismatched request']
+    throw :halt, [500, "Simulator received mismatched request\n"]
   end
 end
 
@@ -31,7 +31,7 @@ def run_expectation
     File.open(ERROR_FILE, 'w') do |f|
       f.puts "Received unexpected request: #{request.inspect}"
     end
-    throw :halt, [500, 'Simulator received unexpected request']
+    throw :halt, [500, "Simulator received unexpected request\n"]
   end
   expectation = File.read files.first
   FileUtils.rm files.first
@@ -49,7 +49,7 @@ def verify_expectations
   check_for_non_received_requests
   errors = File.read ERROR_FILE
   throw :halt, [400, errors] unless errors.empty?
-  'OK'
+  "OK\n"
 end
 
 private
