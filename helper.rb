@@ -15,10 +15,6 @@ def expect label
   end
 end
 
-def and_return
-  yield
-end
-
 # Note: client *must* send a Content-Type header of 'text/plain'. Probably.
 def set_expectation
   content_type 'text/plain'
