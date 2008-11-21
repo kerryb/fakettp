@@ -1,0 +1,91 @@
+h1. HTTP Simulator (cooler name TBA)
+
+h2. %{color:red}Work in Progress!%
+
+The basics work, but it's still really just a spike, and needs a fair bit of tidying-up (and some tests!)
+
+h2. Purpose
+
+When you are writing acceptance/integration tests for an application which makes HTTP requests to a remote application, sometimes you need to be able to test the interactions in different scenarios without talking to a real instance of the remote application.
+
+This tool is a standalone web application that allows you to mock requests (ie set expectations on the requests your application makes, and return suitable responses to those requests).
+
+h2. Dependencies
+
+@sudo gem install rack sinatra@
+
+h2. Installation
+
+The application uses "Sinatra":http://sinatra.rubyforge.org/ and "Rack":http://rack.rubyforge.org/, so can be installed on any Rack-compatible server. The easiest way is probably to use "Passenger":http://www.modrails.com/ (mod_rails) with Apache.
+
+Once you've installed Passenger, create a virtual host along these lines:
+
+<pre><code>
+  <VirtualHost *:80>
+    ServerName httpfake.local
+    DocumentRoot "/path/to/httpfake/public"
+    <directory "/path/to/httpfake/public">
+      Order deny,allow
+      Deny from all
+      Allow from 127.0.0.1
+    </directory>
+  </VirtualHost>
+</code></pre>
+
+Then make sure @httpfake.local@ resolves to 127.0.0.1 (assuming you're running the simulator on the same machine as the application under test), eg by adding the following line to @/etc/hosts@:
+
+@127.0.0.1	httpfake.local@
+
+h3. %{color:red}Important security note%
+
+Because expectations are set by posting Ruby code to the simulator, you probably don't want any old Tom, Dick or Harry to be able to connect. The security settings in the virtual host config example above restrict access to clients running on the local machine.
+
+h2. Usage
+
+h3. Resetting
+
+To reset the simulator (ie remove all expectations and errors), make an HTTP POST request to @http://httpfake.local/reset@.
+
+h3. Setting expectations
+
+To create a new expectation, make an HTTP POST request to @http://httpfake.local/expect@, with a _Content-Type_ header of 'text/plain' and the request data containing a Ruby block to execute.
+
+The supplied code should be in the following format, and will generally consist of a number of assertions on the request, followed by creation of the response to return to the application under test.
+
+<pre><code>
+  expect "GET of /foo" do
+    request.host.should == 'httpfake.local'
+    request.path_info.should == '/foo'
+  
+    content_type 'text/plain'
+    "All is well\n"
+  end
+</code></pre>
+
+The label on the first line is used in error reporting.
+
+The expectation code has access to the underlying Sinatra/Rack stuff (this will be tidied up at some point), as well as "RSpec":http://rspec.info matchers.
+
+h3. Verifying
+
+To verify that all expectations have been met, make an HTTP GET request to @http://httpfake.local/verify@.
+
+If all is well, the response will be a _200 OK_ with a body of 'OK'. Otherwise the status will be _400 Bad Request_, with a list of failures in the body. The failure messages include the complete details of the unexpected request that was received, to assist debugging.
+
+h3. Multiple hosts
+
+To have the simulator respond to multiple hostnames, create the appropriate hosts entries and add a _ServerAlias_ entry to the virtual host config, under the _ServerName_ line, eg
+
+@ServerAlias foo.com bar.com@.
+
+h2. To Do
+
+* Come up with a cool name!
+* Add tests
+* Add examples
+* Refactor to be OO rather than dumping everything in Kernel
+* Only respond to control requests (reset/expect/verify) on main hostname only
+* Make main hostname configurable
+* Show label in verification error for expected requests that weren't received
+* Add facility to stub as well as mock requests
+* Allow more flexibility in request ordering
