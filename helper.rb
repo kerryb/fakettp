@@ -1,4 +1,5 @@
 require 'spec'
+include Spec::Matchers
 
 TMP_DIR = File.dirname(__FILE__) + '/tmp'
 ERROR_FILE = "#{TMP_DIR}/errors"
