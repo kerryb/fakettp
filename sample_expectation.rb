@@ -1,5 +1,5 @@
 expect "Dummy request" do
-  request.host.should == 'httpfake.local'
+  request.host.should == 'fakettp.local'
   request.path_info.should == '/foo'
 
   content_type 'text/plain'

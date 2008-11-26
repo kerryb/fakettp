@@ -1,4 +1,4 @@
-h1. HTTP Simulator (cooler name TBA)
+h1. FakeTTP
 
 h2. %{color:red}Work in Progress!%
 
@@ -8,7 +8,7 @@ h2. Purpose
 
 When you are writing acceptance/integration tests for an application which makes HTTP requests to a remote application, sometimes you need to be able to test the interactions in different scenarios without talking to a real instance of the remote application.
 
-This tool is a standalone web application that allows you to mock requests (ie set expectations on the requests your application makes, and return suitable responses to those requests).
+FakeTTP is a standalone web application that allows you to mock requests (ie set and verify expectations on the requests your application makes, and return suitable responses to those requests).
 
 h2. Dependencies
 
@@ -16,15 +16,15 @@ h2. Dependencies
 
 h2. Installation
 
-The application uses "Sinatra":http://sinatra.rubyforge.org/ and "Rack":http://rack.rubyforge.org/, so can be installed on any Rack-compatible server. The easiest way is probably to use "Passenger":http://www.modrails.com/ (mod_rails) with Apache.
+FakeTTP uses "Sinatra":http://sinatra.rubyforge.org/ and "Rack":http://rack.rubyforge.org/, so can be installed on any Rack-compatible server. The easiest way is probably to use "Passenger":http://www.modrails.com/ (mod_rails) with Apache.
 
 Once you've installed Passenger, create a virtual host along these lines:
 
 <pre><code>
   <VirtualHost *:80>
-    ServerName httpfake.local
-    DocumentRoot "/path/to/httpfake/public"
-    <directory "/path/to/httpfake/public">
+    ServerName fakettp.local
+    DocumentRoot "/path/to/fakettp/public"
+    <directory "/path/to/fakettp/public">
       Order deny,allow
       Deny from all
       Allow from 127.0.0.1
@@ -32,19 +32,19 @@ Once you've installed Passenger, create a virtual host along these lines:
   </VirtualHost>
 </code></pre>
 
-Then make sure @httpfake.local@ resolves to 127.0.0.1 (assuming you're running the simulator on the same machine as the application under test), eg by adding the following line to @/etc/hosts@:
+Then make sure @fakettp.local@ resolves to 127.0.0.1 (assuming you're running the simulator on the same machine as the application under test), eg by adding the following line to @/etc/hosts@:
 
-@127.0.0.1	httpfake.local@
+@127.0.0.1	fakettp.local@
 
 h3. %{color:red}Important security note%
 
-Because expectations are set by posting Ruby code to the simulator, you probably don't want any old Tom, Dick or Harry to be able to connect. The security settings in the virtual host config example above restrict access to clients running on the local machine.
+Because expectations are set by posting Ruby code to be executed on the server, you probably don't want any old Tom, Dick or Harry to be able to connect. The security settings in the virtual host config example above restrict access to clients running on the local machine.
 
 h2. Usage
 
 h3. Resetting
 
-To reset the simulator (ie remove all expectations and errors), make an HTTP POST request to @http://httpfake.local/reset@.
+To reset FakeTTP (ie remove all expectations and errors), make an HTTP POST request to @http://httpfake.local/reset@.
 
 h3. Setting expectations
 
@@ -74,17 +74,17 @@ If all is well, the response will be a _200 OK_ with a body of 'OK'. Otherwise t
 
 h3. Multiple hosts
 
-To have the simulator respond to multiple hostnames, create the appropriate hosts entries and add a _ServerAlias_ entry to the virtual host config, under the _ServerName_ line, eg
+To have FakeTTP respond to multiple hostnames, create the appropriate hosts entries. If you're using name-based virtual hosts in Apache, add a _ServerAlias_ entry to the virtual host config, under the _ServerName_ line, eg:
 
-@ServerAlias foo.com bar.com@.
+@ServerAlias foo.com bar.com@
 
 h2. To Do
 
-* Come up with a cool name!
-* Add tests
-* Add examples
+* Increase test coverage
 * Refactor to be OO rather than dumping everything in Kernel
+* Add examples
 * Only respond to control requests (reset/expect/verify) on main hostname only
+* Make control requests RESTful?
 * Make main hostname configurable
 * Show label in verification error for expected requests that weren't received
 * Add facility to stub as well as mock requests
