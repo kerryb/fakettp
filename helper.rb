@@ -1,7 +1,7 @@
 require 'spec'
 include Spec::Matchers
 
-TMP_DIR = File.dirname(__FILE__) + '/tmp'
+TMP_DIR = File.dirname(__FILE__) + '/tmp/fakettp'
 ERROR_FILE = "#{TMP_DIR}/errors"
 EXPECTATION_DIR = "#{TMP_DIR}/expectations"
 
@@ -23,6 +23,7 @@ def set_expectation
   File.open(next_expectation_file, 'w') do |f|
     f.write expectation
   end
+  "Expect OK\n"
 end
 
 def run_expectation
@@ -51,7 +52,7 @@ def verify_expectations
   check_for_non_received_requests
   errors = File.read ERROR_FILE
   throw :halt, [400, errors] unless errors.empty?
-  "OK\n"
+  "Verify OK\n"
 end
 
 private

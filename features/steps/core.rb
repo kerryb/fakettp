@@ -17,7 +17,7 @@ end
 Then /^verifying the simulator should report success$/ do
   req = Net::HTTP::Get.new '/verify'
   resp = Net::HTTP.new('fakettp.local').start {|http| http.request(req) }
-  resp.body.should == "OK\n"
+  resp.body.should == "Verify OK\n"
   resp.class.should == Net::HTTPOK
 end
 
