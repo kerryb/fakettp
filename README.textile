@@ -1,6 +1,6 @@
 h1. FakeTTP
 
-h2. %{color:red}Work in Progress!%
+h2. WARNING: Work in Progress!
 
 The basics work, but it's still really just a spike, and needs a fair bit of tidying-up (and some tests!)
 
@@ -36,7 +36,7 @@ Then make sure @fakettp.local@ resolves to 127.0.0.1 (assuming you're running th
 
 @127.0.0.1	fakettp.local@
 
-h3. %{color:red}Important security note%
+h3. IMPORTANT: security note
 
 Because expectations are set by posting Ruby code to be executed on the server, you probably don't want any old Tom, Dick or Harry to be able to connect. The security settings in the virtual host config example above restrict access to clients running on the local machine.
 
