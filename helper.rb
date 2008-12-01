@@ -9,8 +9,8 @@ def expect label
   begin
     yield
   rescue Exception => e
-    File.open(ERROR_FILE, 'w') do |f|
-      f.puts "Error in #{label}: #{e.message}\n\nRequest: #{request.inspect}"
+    File.open(ERROR_FILE, 'a') do |f|
+      f.puts "\nError in #{label}: #{e.message}\n\nRequest: #{request.inspect}"
     end
     throw :halt, [500, "Simulator received mismatched request\n"]
   end
@@ -30,8 +30,8 @@ def run_expectation
   content_type 'text/plain'
   files = Dir.glob(EXPECTATION_DIR + '/*.rb').sort
   if files.empty?
-    File.open(ERROR_FILE, 'w') do |f|
-      f.puts "Received unexpected request: #{request.inspect}"
+    File.open(ERROR_FILE, 'a') do |f|
+      f.puts "\nReceived unexpected request: #{request.inspect}"
     end
     throw :halt, [500, "Simulator received unexpected request\n"]
   end
@@ -68,8 +68,8 @@ end
 
 def check_for_non_received_requests
   Dir.glob(EXPECTATION_DIR + '/*.rb').each do |f|
-    File.open(ERROR_FILE, 'w') do |f|
-      f.puts "Expected request not received."
+    File.open(ERROR_FILE, 'a') do |f|
+      f.puts "\nExpected request not received."
       # TODO: Grab label from expectation (redefine expect?)
     end
   end

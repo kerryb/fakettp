@@ -39,3 +39,11 @@ Feature: Mocking an HTTP server
     And we expect get_foo
     When we request /
     Then verifying the simulator should report a failure, with message "Expected request not received"
+
+  Scenario: Two expectations, with requests received in the wrong order
+    Given the simulator is reset
+    And we expect get_root
+    And we expect get_foo
+    When we request /foo
+    And we request /
+    Then verifying the simulator should report a failure, with message "Error in GET /: expected: "/",.*got: "/foo".*Error in GET /foo: expected: "/foo",.*got: "/""
