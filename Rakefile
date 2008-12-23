@@ -5,11 +5,11 @@ require 'rake/gempackagetask'
 require 'spec/rake/spectask'
  
 GEM = "fakettp"
-GEM_VERSION = "0.2.0"
-SUMMARY = "FIXME Summary"
-AUTHOR = "FIXME Author"
-EMAIL = "FIXME Email"
-HOMEPAGE = "FIXME HomePage"
+GEM_VERSION = "0.1.0"
+SUMMARY = "HTTP server mocking tool"
+AUTHOR = "Kerry Buckley"
+EMAIL = "kerryjbuckley@gmail.com"
+HOMEPAGE = "http://github.com/kerryb/fakettp/"
 
  
 spec = Gem::Specification.new do |s|
