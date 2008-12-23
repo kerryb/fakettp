@@ -1,0 +1,2 @@
+module Fakettp
+end
