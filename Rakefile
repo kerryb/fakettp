@@ -3,6 +3,9 @@ require 'rubygems/specification'
 require 'rake'
 require 'rake/gempackagetask'
 require 'spec/rake/spectask'
+require 'cucumber/rake/task'
+
+$:.unshift(File.dirname(__FILE__) + '/../../lib')
  
 GEM = "fakettp"
 GEM_VERSION = "0.1.0"
@@ -10,7 +13,6 @@ SUMMARY = "HTTP server mocking tool"
 AUTHOR = "Kerry Buckley"
 EMAIL = "kerryjbuckley@gmail.com"
 HOMEPAGE = "http://github.com/kerryb/fakettp/"
-
  
 spec = Gem::Specification.new do |s|
   s.name = GEM
@@ -20,13 +22,20 @@ spec = Gem::Specification.new do |s|
   s.add_dependency('sinatra', '>=0.3.0')
   s.require_paths = ['lib']
   # s.files = FileList['lib/**/*.rb' '[A-Z]*'].to_a
-  s.files = FileList['lib/**/*.rb'].to_a
+  s.files = FileList['lib/**/*'].to_a
   
   s.author = AUTHOR
   s.email = EMAIL
   s.homepage = HOMEPAGE
 
   s.rubyforge_project = GEM # GitHub bug, gem isn't being build when this miss
+end
+
+# task :default => [:features, :make_spec, :repackage]
+task :default => [:make_spec, :repackage]
+
+Cucumber::Rake::Task.new do |t|
+  t.cucumber_opts = "--format pretty"
 end
 
 Spec::Rake::SpecTask.new do |t|
