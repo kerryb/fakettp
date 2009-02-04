@@ -1,17 +1,13 @@
-require 'httparty'
-
-class FakeTTP
-  include HTTParty
-  base_uri 'fakettp.local'
-end
-
 Given /^the simulator is reset$/ do
-  FakeTTP.post '/reset'
+  req = Net::HTTP::Post.new '/reset'
+  Net::HTTP.new('fakettp.local').start {|http| http.request(req) }
 end
 
 Given /^we expect (\S*)$/ do |filename|
   body = File.read(File.dirname(__FILE__) + "/../expectations/#{filename}")
-  FakeTTP.post '/expect', :body => body, :headers => {'Content-Type' => 'text/plain'}
+  req = Net::HTTP::Post.new '/expect', {'Content-Type' => 'text/plain'}
+  req.body = body
+  Net::HTTP.new('fakettp.local').start {|http| http.request(req) }
 end
 
 Then /^verifying the simulator should report success$/ do
@@ -29,6 +25,7 @@ Then /^verifying the simulator should report a failure, with message "(.*)"$/ do
 end
 
 When /^we request (\S*)$/ do |path|
-  FakeTTP.get path rescue nil
+  req = Net::HTTP::Get.new path
+  Net::HTTP.new('fakettp.local').start {|http| http.request(req) }
 end
 
