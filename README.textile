@@ -14,8 +14,6 @@ h2. Dependencies
 
 @sudo gem install rack sinatra@
 
-If you want to be able to run the project's tests, you'll also need to @sudo gem install httparty@, but this is not a dependency for using FakeTTP.
-
 h2. Installation
 
 Either download the latest snapshot of the project using the "Download" button above, or clone using git:
