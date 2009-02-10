@@ -22,8 +22,8 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = true
   s.add_dependency('sinatra', '>=0.3.0')
   s.require_paths = ['lib']
-  # s.files = FileList['lib/**/*.rb' '[A-Z]*'].to_a
-  s.files = FileList['lib/**/*'].to_a
+  s.files = FileList['lib/**/*', 'bin/**/*'].to_a
+  s.bindir = 'bin'
   
   s.author = AUTHOR
   s.email = EMAIL
@@ -51,7 +51,7 @@ Rake::GemPackageTask.new(spec) do |pkg|
 end
  
 desc "Install the gem locally"
-task :install_gem => [:package] do
+task :install_gem => [:make_spec, :repackage] do
   sh %{sudo gem install -l pkg/#{GEM}-#{GEM_VERSION}}
 end
  
