@@ -1,9 +1,9 @@
 require 'spec'
 include Spec::Matchers
 
-TMP_DIR = File.dirname(__FILE__) + '/tmp/fakettp'
-ERROR_FILE = "#{TMP_DIR}/errors"
-EXPECTATION_DIR = "#{TMP_DIR}/expectations"
+TMP_DIR = File.join FAKETTP_BASE, 'tmp'
+ERROR_FILE = File.join TMP_DIR, 'errors'
+EXPECTATION_DIR = File.join TMP_DIR, 'expectations'
 
 def expect label
   begin

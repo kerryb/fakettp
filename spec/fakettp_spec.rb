@@ -1,5 +1,3 @@
 describe "Fakettp" do
-  it "should have real tests" do
-    false.should eql(true)
-  end
+  it "should have real tests"
 end

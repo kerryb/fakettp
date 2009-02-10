@@ -1,3 +1,4 @@
 tmp/**
 pkg
+install
 fakettp.gemspec

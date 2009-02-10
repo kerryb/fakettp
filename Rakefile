@@ -19,6 +19,7 @@ spec = Gem::Specification.new do |s|
   s.version = GEM_VERSION
   s.platform = Gem::Platform::RUBY
   s.summary = SUMMARY
+  s.has_rdoc = true
   s.add_dependency('sinatra', '>=0.3.0')
   s.require_paths = ['lib']
   # s.files = FileList['lib/**/*.rb' '[A-Z]*'].to_a
@@ -31,13 +32,15 @@ spec = Gem::Specification.new do |s|
   s.rubyforge_project = GEM # GitHub bug, gem isn't being build when this miss
 end
 
-# task :default => [:features, :make_spec, :repackage]
-task :default => [:make_spec, :repackage]
+desc 'run specs and create gem'
+task :default => [:spec, :make_spec, :repackage]
 
+desc 'run integration tests'
 Cucumber::Rake::Task.new do |t|
   t.cucumber_opts = "--format pretty"
 end
 
+desc 'Run specs'
 Spec::Rake::SpecTask.new do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
   t.spec_opts = %w(-fs --color)
@@ -48,8 +51,8 @@ Rake::GemPackageTask.new(spec) do |pkg|
 end
  
 desc "Install the gem locally"
-task :install => [:package] do
-  sh %{sudo gem install pkg/#{GEM}-#{GEM_VERSION}}
+task :install_gem => [:package] do
+  sh %{sudo gem install -l pkg/#{GEM}-#{GEM_VERSION}}
 end
  
 desc "Create a gemspec file"
@@ -57,4 +60,11 @@ task :make_spec do
   File.open("#{GEM}.gemspec", "w") do |file|
     file.puts spec.to_ruby
   end
+end
+
+desc 'Install FakeTTP into local install directory'
+task :test_install => :install_gem do
+  mkdir_p %w(install/public install/tmp/expectations)
+  cp 'lib/fakettp/config.ru', 'install'
+  touch 'install/tmp/restart.txt'
 end
