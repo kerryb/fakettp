@@ -21,6 +21,7 @@ spec = Gem::Specification.new do |s|
   s.summary = SUMMARY
   s.has_rdoc = true
   s.add_dependency('sinatra', '>=0.3.0')
+  s.add_development_dependency('rspec', '>=1.1.12')
   s.require_paths = ['lib']
   s.files = FileList['lib/**/*', 'bin/**/*'].to_a
   s.bindir = 'bin'
