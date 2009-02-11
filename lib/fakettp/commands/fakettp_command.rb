@@ -1,6 +1,6 @@
 module Fakettp
   module Commands
-    module FakettpCommand
+    class FakettpCommand
       def initialize args
         @args = args
       end
@@ -8,6 +8,10 @@ module Fakettp
       def run
         command = get_command
         return usage unless command
+        case command
+        when 'install' then
+          return install
+        end
         return 0
       end
   
@@ -16,9 +20,17 @@ module Fakettp
       def get_command
         @args[0]
       end
+      
+      def install
+        usage
+      end
   
       def usage
-        STDERR.puts "No!"
+        $stderr.puts <<-EOF
+Usage:
+
+  [TODO]
+EOF
         return 1
       end
     end
