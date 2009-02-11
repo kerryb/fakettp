@@ -34,7 +34,7 @@ spec = Gem::Specification.new do |s|
 end
 
 desc 'run specs and create gem'
-task :default => [:spec, :make_spec, :repackage]
+task :default => [:spec, :test_install, :features]
 
 desc 'run integration tests'
 Cucumber::Rake::Task.new do |t|
