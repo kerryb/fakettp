@@ -1,2 +1,5 @@
 #!/usr/bin/env ruby
-puts 'Not yet implemented :-)'
+
+require 'fakettp/commands/fakettp_command'
+
+exit FakettpCommand.new(ARGV).run
