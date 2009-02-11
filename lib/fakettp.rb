@@ -1,10 +1,11 @@
+$:.unshift(File.dirname(__FILE__))
+
 require 'sinatra'
 require 'fakettp/helper'
+require 'fakettp/commands/fakettp_command'
 
-Sinatra::Application.default_options.merge!(
-  :run => false,
-  :env => ENV['RACK_ENV']
-)
+Sinatra::Default.set :run, false
+Sinatra::Default.set :environment, ENV['RACK_ENV']
 
 error do
   request.env['sinatra.error'].inspect
