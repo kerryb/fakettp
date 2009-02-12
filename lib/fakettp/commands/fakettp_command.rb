@@ -31,6 +31,7 @@ module Fakettp
         FileUtils.mkdir_p dir + '/tmp/expectations'
         FileUtils.mkdir_p dir + '/public'
         FileUtils.cp File.dirname(__FILE__) + '/../config.ru', dir
+        FileUtils.cp File.dirname(__FILE__) + '/../../../README.html', dir
         return 0
       end
       

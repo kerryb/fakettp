@@ -73,8 +73,8 @@ describe Fakettp::Commands::FakettpCommand do
         
         it 'should copy the correct files to the directory' do
           @command.run
-          Dir.glob(@dir + '/**/*').should == [@dir + '/config.ru', @dir + '/public', @dir + '/tmp',
-              @dir + '/tmp/expectations']
+          Dir.glob(@dir + '/**/*').sort.should == [@dir + '/config.ru', @dir + '/README.html',
+              @dir + '/public', @dir + '/tmp', @dir + '/tmp/expectations'].sort
         end
     
         it 'should complete with zero status' do
