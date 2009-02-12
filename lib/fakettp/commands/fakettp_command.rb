@@ -22,7 +22,20 @@ module Fakettp
       end
       
       def install
-        usage
+        dir = get_dir
+        return usage unless dir
+        if File.exist? dir
+          $stderr.puts "File or directory #{dir} already exists."
+          return 1
+        end
+        FileUtils.mkdir_p dir + '/tmp'
+        FileUtils.mkdir_p dir + '/public'
+        FileUtils.cp File.dirname(__FILE__) + '/../config.ru', dir
+        return 0
+      end
+      
+      def get_dir
+        @args[1]
       end
   
       def usage

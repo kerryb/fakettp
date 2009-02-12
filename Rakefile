@@ -65,7 +65,7 @@ end
 
 desc 'Install FakeTTP into local install directory'
 task :test_install => :install_gem do
-  mkdir_p %w(install/public install/tmp/expectations)
-  cp 'lib/fakettp/config.ru', 'install'
+  rm_rf 'install'
+  system 'fakettp install install'
   touch 'install/tmp/restart.txt'
 end
