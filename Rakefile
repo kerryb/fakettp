@@ -30,7 +30,7 @@ spec = Gem::Specification.new do |s|
   s.email = EMAIL
   s.homepage = HOMEPAGE
 
-  s.rubyforge_project = GEM # GitHub bug, gem isn't being build when this miss
+  s.rubyforge_project = GEM # GitHub bug, gem isn't being build when this is missed
 end
 
 desc 'run specs and create gem'

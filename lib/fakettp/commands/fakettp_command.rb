@@ -28,7 +28,7 @@ module Fakettp
           $stderr.puts "File or directory #{dir} already exists."
           return 1
         end
-        FileUtils.mkdir_p dir + '/tmp'
+        FileUtils.mkdir_p dir + '/tmp/expectations'
         FileUtils.mkdir_p dir + '/public'
         FileUtils.cp File.dirname(__FILE__) + '/../config.ru', dir
         return 0
