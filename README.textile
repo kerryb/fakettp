@@ -101,3 +101,6 @@ h2. To Do
 * Show label in verification error for expected requests that weren't received
 * Add facility to stub as well as mock requests
 * Allow more flexibility in request ordering
+* Allow user-specific helper files in installation dir
+* Make tmp dir world-writeable
+* Check install/run behaviour when development dependencies are not installed
