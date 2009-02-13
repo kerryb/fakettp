@@ -90,6 +90,16 @@ To have FakeTTP respond to multiple hostnames, create the appropriate hosts entr
 
 @ServerAlias foo.com bar.com@
 
+h2. Change log
+
+0.1.1 (13 Feb 2009)
+
+* Fix permissions on installed tmp directory.
+
+0.1.0 (13 Feb 2009)
+
+* First release as a gem.
+
 h2. To Do
 
 * Increase test coverage
@@ -97,10 +107,9 @@ h2. To Do
 * Add examples
 * Only respond to control requests (reset/expect/verify) on main hostname only
 * Make control requests RESTful?
-* Make main hostname configurable
+* Make main hostname configurable?
 * Show label in verification error for expected requests that weren't received
 * Add facility to stub as well as mock requests
 * Allow more flexibility in request ordering
 * Allow user-specific helper files in installation dir
-* Make tmp dir world-writeable
 * Check install/run behaviour when development dependencies are not installed

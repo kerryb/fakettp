@@ -76,6 +76,13 @@ describe Fakettp::Commands::FakettpCommand do
           Dir.glob(@dir + '/**/*').sort.should == [@dir + '/config.ru', @dir + '/README.html',
               @dir + '/public', @dir + '/tmp', @dir + '/tmp/expectations'].sort
         end
+        
+        ['tmp', 'tmp/expectations'].each do |dir|
+          it "should make the #{dir} directory world-read/writeable" do
+            @command.run
+            (File.stat(@dir + "/#{dir}").mode & 0777).should == 0777
+          end
+        end
     
         it 'should complete with zero status' do
           @command.run.should == 0
