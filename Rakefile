@@ -27,12 +27,10 @@ spec = Gem::Specification.new do |s|
   s.add_development_dependency('RedCloth', '>=4.1.1')
   s.require_paths = ['lib']
   s.files = FileList['lib/**/*', 'bin/**/*', 'README.html'].to_a
-  s.bindir = 'bin'
-  
+  s.executables = %w(fakettp)  
   s.author = AUTHOR
   s.email = EMAIL
   s.homepage = HOMEPAGE
-
   s.rubyforge_project = GEM # GitHub bug, gem isn't being build when this is missed
 end
 
@@ -70,7 +68,8 @@ end
  
 desc "Install the gem locally"
 task :install_gem => [:make_spec, :repackage] do
-  sh %{sudo gem install -l pkg/#{GEM}-#{GEM_VERSION}}
+  status = sh %{sudo gem install -l pkg/#{GEM}-#{GEM_VERSION}}
+  puts "Status: #{status}"
 end
 
 desc 'Install FakeTTP into local install directory'
