@@ -9,7 +9,7 @@ require 'redcloth'
 $:.unshift(File.dirname(__FILE__) + '/../../lib')
  
 GEM = "fakettp"
-GEM_VERSION = "0.1.1"
+GEM_VERSION = "0.1.2"
 SUMMARY = "HTTP server mocking tool"
 AUTHOR = "Kerry Buckley"
 EMAIL = "kerryjbuckley@gmail.com"

@@ -1,3 +1,5 @@
+<!-- README.html is generated from README.textile -->
+
 h1. FakeTTP
 
 h2. Purpose
@@ -91,6 +93,10 @@ To have FakeTTP respond to multiple hostnames, create the appropriate hosts entr
 @ServerAlias foo.com bar.com@
 
 h2. Change log
+
+0.1.2 (13 Feb 2009)
+
+* Make sure README.html appears in generated gem
 
 0.1.1 (13 Feb 2009)
 
