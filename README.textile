@@ -1,32 +1,36 @@
 h1. FakeTTP
 
-h2. WARNING: Work in Progress!
-
-The basics work, but it's still really just a spike, and needs a fair bit of tidying-up (and some tests!)
-
 h2. Purpose
 
 When you are writing acceptance/integration tests for an application which makes HTTP requests to a remote application, sometimes you need to be able to test the interactions in different scenarios without talking to a real instance of the remote application.
 
 FakeTTP is a standalone web application that allows you to mock requests (ie set and verify expectations on the requests your application makes, and return suitable responses to those requests).
 
-h2. Dependencies
-
-@sudo gem install rack sinatra@
-
 h2. Installation
 
-Either download the latest snapshot of the project using the "Download" button above, or clone using git:
+h3. Install the gem
 
-@git clone git://github.com/kerryb/fakettp.git@
+Add GitHub as a gem source (you only need to do this once):
 
-If you're stuck behind a firewall that blocks git (port 9418), you can use HTTP instead:
+@gem sources -a http://gems.github.com@
 
-@git clone http://github.com/kerryb/fakettp.git@
+Then install FakeTTP:
 
-FakeTTP uses "Sinatra":http://sinatra.rubyforge.org/ and "Rack":http://rack.rubyforge.org/, so can be installed on any Rack-compatible server. The easiest way is probably to use "Passenger":http://www.modrails.com/ (mod_rails) with Apache.
+@sudo gem install kerryb-fakettp@
 
-Once you've installed Passenger, create a virtual host along these lines:
+Alternatively, you can specify the source when you install the gem:
+
+@sudo gem install kerryb-fakettp --source http://gems.github.com@
+
+h3. Create a FakeTTP directory
+
+You can install FakeTTP anywhere that your web server user can see it:
+
+@fakettp install <directory>@
+
+h3. Point your web server at the directory
+
+FakeTTP should work with any Rack-compatible server: just point the server to the correct directory. For example, using "Passenger":http://www.modrails.com/ (mod_rails) with Apache, create a virtual host along these lines:
 
 <pre><code>
   <VirtualHost *:80>

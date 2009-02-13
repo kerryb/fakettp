@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'fakettp/commands/fakettp_command'
+
+exit Fakettp::Commands::FakettpCommand.new(ARGV).run
