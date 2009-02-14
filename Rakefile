@@ -9,11 +9,12 @@ require 'redcloth'
 $:.unshift(File.dirname(__FILE__) + '/../../lib')
  
 GEM = "fakettp"
+GITHUB_USER = "kerryb"
 GEM_VERSION = "0.1.2"
 SUMMARY = "HTTP server mocking tool"
 AUTHOR = "Kerry Buckley"
 EMAIL = "kerryjbuckley@gmail.com"
-HOMEPAGE = "http://github.com/kerryb/fakettp/"
+HOMEPAGE = "http://github.com/#{GITHUB_USER}/#{GEM}/"
  
 spec = Gem::Specification.new do |s|
   s.name = GEM
@@ -23,6 +24,7 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = true
   s.add_dependency('sinatra', '>=0.3.0')
   s.add_development_dependency('rspec', '>=1.1.12')
+  s.add_development_dependency('rcov', '>=1.1.12')
   s.add_development_dependency('cucumber', '>=0.1.16')
   s.add_development_dependency('RedCloth', '>=4.1.1')
   s.require_paths = ['lib']
@@ -68,8 +70,8 @@ end
  
 desc "Install the gem locally"
 task :install_gem => [:make_spec, :repackage] do
-  status = sh %{sudo gem install -l pkg/#{GEM}-#{GEM_VERSION}}
-  puts "Status: #{status}"
+  system %{sudo gem uninstall -xa #{GEM} #{GITHUB_USER}-#{GEM}}
+  sh %{sudo gem install -l pkg/#{GEM}-#{GEM_VERSION}}
 end
 
 desc 'Install FakeTTP into local install directory'
