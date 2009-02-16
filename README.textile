@@ -119,3 +119,4 @@ h2. To Do
 * Allow more flexibility in request ordering
 * Allow user-specific helper files in installation dir
 * Check install/run behaviour when development dependencies are not installed
+* Provide Ruby API to set expectations etc

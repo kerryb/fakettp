@@ -11,8 +11,9 @@ module Fakettp
         case command
         when 'install' then
           return install
+        else
+          return usage
         end
-        return 0
       end
   
       private
