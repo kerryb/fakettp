@@ -3,6 +3,7 @@ require 'rubygems/specification'
 require 'rake'
 require 'rake/gempackagetask'
 require 'spec/rake/spectask'
+require 'spec/rake/verify_rcov'
 require 'cucumber/rake/task'
 require 'redcloth'
 
@@ -24,7 +25,7 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = true
   s.add_dependency('sinatra', '>=0.3.0')
   s.add_development_dependency('rspec', '>=1.1.12')
-  s.add_development_dependency('rcov', '>=1.1.12')
+  s.add_development_dependency('spicycode-rcov', '>=0.8.0')
   s.add_development_dependency('cucumber', '>=0.1.16')
   s.add_development_dependency('RedCloth', '>=4.1.1')
   s.require_paths = ['lib']
@@ -33,11 +34,11 @@ spec = Gem::Specification.new do |s|
   s.author = AUTHOR
   s.email = EMAIL
   s.homepage = HOMEPAGE
-  s.rubyforge_project = GEM # GitHub bug, gem isn't being build when this is missed
+  s.rubyforge_project = GEM # GitHub bug, gem isn't being built when this is missed
 end
 
 desc 'run specs and create gem'
-task :default => [:spec, :create_readme, :test_install, :features]
+task :default => [:verify_rcov, :create_readme, :test_install, :features]
 
 desc 'run integration tests'
 Cucumber::Rake::Task.new do |t|
@@ -48,6 +49,14 @@ desc 'Run specs'
 Spec::Rake::SpecTask.new do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
   t.spec_opts = %w(-fs --color)
+  t.rcov = true
+  t.rcov_opts = ['--exclude', 'spec']
+end
+
+desc 'Check spec coverage'
+RCov::VerifyTask.new(:verify_rcov => :spec) do |t|
+  t.threshold = 100.0
+  t.index_html = 'coverage/index.html'
 end
 
 desc 'Create README.html from README.textile'
