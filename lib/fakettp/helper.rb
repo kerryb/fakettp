@@ -1,3 +1,4 @@
+require 'sinatra'
 require 'spec'
 include Spec::Matchers
 

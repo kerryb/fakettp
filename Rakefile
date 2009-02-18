@@ -38,7 +38,7 @@ spec = Gem::Specification.new do |s|
 end
 
 desc 'run specs and create gem'
-task :default => [:verify_rcov, :create_readme, :test_install, :features]
+task :default => [:spec, :create_readme, :test_install, :features]
 
 desc 'run integration tests'
 Cucumber::Rake::Task.new do |t|
