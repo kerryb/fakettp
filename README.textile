@@ -120,3 +120,4 @@ h2. To Do
 * Allow user-specific helper files in installation dir
 * Check install/run behaviour when development dependencies are not installed
 * Provide Ruby API to set expectations etc
+* Return the expected content type even if expectation fails

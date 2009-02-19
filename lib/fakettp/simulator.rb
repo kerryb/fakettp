@@ -6,6 +6,7 @@ module Fakettp
     end
     
     def self.verify
+      Error.list.empty?
     end
     
     def self.<< expectation

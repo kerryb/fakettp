@@ -7,14 +7,46 @@ describe Fakettp::Simulator do
   end
   
   describe "resetting" do
+    def do_reset
+      Fakettp::Simulator.reset
+    end
+    
     it 'should clear expectations' do
       Fakettp::Expectation.should_receive :clear_all
-      Fakettp::Simulator.reset
+      do_reset
     end
     
     it 'should clear errors' do
       Fakettp::Error.should_receive :clear_all
-      Fakettp::Simulator.reset
+      do_reset
+    end
+  end
+  
+  describe 'adding an expectation' do
+    def do_add
+      Fakettp::Simulator << stub(:expectation)
+    end
+  end
+  
+  describe "verifying" do
+    def do_verify
+      Fakettp::Simulator.verify
+    end
+    
+    describe 'when there are no errors' do
+      before do
+        Fakettp::Error.stub!(:list).and_return []
+      end
+      
+      it { do_verify.should be_true }
+    end
+    
+    describe 'when there are errors' do
+      before do
+        Fakettp::Error.stub!(:list).and_return [stub(:error)]
+      end
+      
+      it { do_verify.should be_false }
     end
   end
 end
