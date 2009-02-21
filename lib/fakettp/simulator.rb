@@ -10,6 +10,10 @@ module Fakettp
     end
     
     def self.<< expectation
+      Expectation.create expectation
+    end
+    
+    def self.run_expectation
     end
     
     def self.list_errors

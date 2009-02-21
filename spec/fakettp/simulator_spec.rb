@@ -23,8 +23,17 @@ describe Fakettp::Simulator do
   end
   
   describe 'adding an expectation' do
+    before do
+      @expectation = stub(:expectation)
+    end
+    
     def do_add
-      Fakettp::Simulator << stub(:expectation)
+      Fakettp::Simulator << @expectation
+    end
+    
+    it 'should create a new expectation' do
+      Fakettp::Expectation.should_receive(:create).with @expectation
+      do_add
     end
   end
   

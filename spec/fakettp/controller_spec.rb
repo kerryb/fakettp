@@ -62,6 +62,46 @@ describe 'Controller' do
     end
   end
   
+  %w(GET POST PUT DELETE HEAD).each do |verb|
+    describe "receiving an arbitrary #{verb}" do
+      before do
+        Fakettp::Simulator.stub! :run_expectation
+      end
+      
+      define_method :do_request do
+        send verb.downcase.to_sym, '/foo/bar'
+      end
+      
+      it 'should run the next expectation' do
+        Fakettp::Simulator.should_receive :run_expectation
+        do_request
+      end
+      
+      describe 'when the expectation fails' do
+        before do
+          Fakettp::Simulator.stub!(:run_expectation).and_raise
+        end
+        
+        it 'should return a 500 status' do
+          do_request
+          @response.status.should == 500
+        end
+
+        it 'should return a plain text response' do
+          do_request
+          @response.content_type.should == 'text/plain'
+        end
+        
+        unless verb == 'HEAD' # No body for that one
+          it 'should return an error message' do
+            do_request
+            @response.body.should == "Simulator received mismatched request\n"
+          end
+        end
+      end
+    end
+  end
+  
   describe 'getting /verify' do
     before do
       Fakettp::Simulator.stub! :verify
