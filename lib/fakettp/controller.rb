@@ -1,5 +1,4 @@
 require 'sinatra'
-# require 'fakettp/simulator'
 Sinatra::Default.set :run, false
 Sinatra::Default.set :environment, ENV['RACK_ENV']
 
@@ -31,7 +30,7 @@ end
 [:get, :post, :put, :delete, :head].each do |method|
   send method, '/**' do
     begin
-      Fakettp::Simulator.run_expectation
+      Fakettp::Simulator.handle_request
     rescue Exception
       content_type 'text/plain'
       throw :halt, [500, "Simulator received mismatched request\n"]

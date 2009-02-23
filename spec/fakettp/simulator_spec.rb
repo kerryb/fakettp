@@ -37,6 +37,27 @@ describe Fakettp::Simulator do
     end
   end
   
+  describe 'handling a request' do
+    before do
+      @result = 'foo'
+      @expectation = mock Fakettp::Expectation, :execute => @result
+      Fakettp::Expectation.stub!(:next).and_return @expectation
+    end
+    
+    def do_handle
+      Fakettp::Simulator.handle_request
+    end
+    
+    it 'should execute the next request' do
+      @expectation.should_receive :execute
+      do_handle
+    end
+    
+    it 'should return the execution result' do
+      do_handle.should == @result
+    end
+  end
+  
   describe "verifying" do
     def do_verify
       Fakettp::Simulator.verify
@@ -44,7 +65,7 @@ describe Fakettp::Simulator do
     
     describe 'when there are no errors' do
       before do
-        Fakettp::Error.stub!(:list).and_return []
+        Fakettp::Error.stub!(:empty?).and_return true
       end
       
       it { do_verify.should be_true }
@@ -52,10 +73,21 @@ describe Fakettp::Simulator do
     
     describe 'when there are errors' do
       before do
-        Fakettp::Error.stub!(:list).and_return [stub(:error)]
+        Fakettp::Error.stub!(:empty?).and_return false
       end
       
       it { do_verify.should be_false }
+    end
+  end
+  
+  describe 'listing errors' do
+    before do
+      @errors = stub :errors
+      Fakettp::Error.stub!(:list).and_return @errors
+    end
+    
+    it 'should return the error list' do
+      Fakettp::Simulator.list_errors.should == @errors
     end
   end
 end

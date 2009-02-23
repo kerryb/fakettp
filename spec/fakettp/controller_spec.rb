@@ -5,47 +5,16 @@ describe 'Controller' do
     before do
       Fakettp::Simulator.stub! :reset
     end
-    
+
     def do_post
       post '/reset'
     end
-    
+
     it 'should reset the simulator' do
       Fakettp::Simulator.should_receive :reset
       do_post
     end
-    
-    it 'should be successful' do
-      do_post
-      @response.should be_ok
-    end
-    
-    it 'should return a plain text response' do
-      do_post
-      @response.content_type.should == 'text/plain'
-    end
-    
-    it 'should return an acknowledgement message' do
-      do_post
-      @response.body.should == "Reset OK\n"
-    end
-  end
-  
-  describe 'posting an expectation to /expect' do
-    before do
-      @body = 'foo'
-      Fakettp::Simulator.stub! :<<
-    end
-    
-    def do_post
-      post '/expect', @body
-    end
-    
-    it 'should set a simulator expectation using the request body' do
-      Fakettp::Simulator.should_receive(:<<).with @body
-      do_post
-    end
-    
+
     it 'should be successful' do
       do_post
       @response.should be_ok
@@ -55,33 +24,64 @@ describe 'Controller' do
       do_post
       @response.content_type.should == 'text/plain'
     end
-    
+
+    it 'should return an acknowledgement message' do
+      do_post
+      @response.body.should == "Reset OK\n"
+    end
+  end
+
+  describe 'posting an expectation to /expect' do
+    before do
+      @body = 'foo'
+      Fakettp::Simulator.stub! :<<
+    end
+
+    def do_post
+      post '/expect', @body
+    end
+
+    it 'should set a simulator expectation using the request body' do
+      Fakettp::Simulator.should_receive(:<<).with @body
+      do_post
+    end
+
+    it 'should be successful' do
+      do_post
+      @response.should be_ok
+    end
+
+    it 'should return a plain text response' do
+      do_post
+      @response.content_type.should == 'text/plain'
+    end
+
     it 'should return an acknowledgement message' do
       do_post
       @response.body.should == "Expect OK\n"
     end
   end
-  
+
   %w(GET POST PUT DELETE HEAD).each do |verb|
     describe "receiving an arbitrary #{verb}" do
       before do
-        Fakettp::Simulator.stub! :run_expectation
+        Fakettp::Simulator.stub! :handle_request
       end
-      
+
       define_method :do_request do
         send verb.downcase.to_sym, '/foo/bar'
       end
-      
-      it 'should run the next expectation' do
-        Fakettp::Simulator.should_receive :run_expectation
+
+      it 'should simulate handling the request' do
+        Fakettp::Simulator.should_receive :handle_request
         do_request
       end
-      
-      describe 'when the expectation fails' do
+
+      describe 'when the simulator returns an error' do
         before do
-          Fakettp::Simulator.stub!(:run_expectation).and_raise
+          Fakettp::Simulator.stub!(:handle_request).and_raise
         end
-        
+
         it 'should return a 500 status' do
           do_request
           @response.status.should == 500
@@ -91,7 +91,7 @@ describe 'Controller' do
           do_request
           @response.content_type.should == 'text/plain'
         end
-        
+
         unless verb == 'HEAD' # No body for that one
           it 'should return an error message' do
             do_request
@@ -101,28 +101,28 @@ describe 'Controller' do
       end
     end
   end
-  
+
   describe 'getting /verify' do
     before do
       Fakettp::Simulator.stub! :verify
       @errors = 'bar'
       Fakettp::Simulator.stub!(:list_errors).and_return @errors
     end
-    
+
     def do_get
       get '/verify'
     end
-    
+
     it 'should verify the simulator' do
       Fakettp::Simulator.should_receive :verify
       do_get
     end
-    
+
     it 'should return a plain text response' do
       do_get
       @response.content_type.should == 'text/plain'
     end
-  
+
     describe 'when verification succeeds' do
       before do
         Fakettp::Simulator.stub!(:verify).and_return true
@@ -132,13 +132,13 @@ describe 'Controller' do
         do_get
         @response.should be_ok
       end
-    
+
       it 'should return an acknowledgement message' do
         do_get
         @response.body.should == "Verify OK\n"
       end
     end
-    
+
     describe 'when verification fails' do
       before do
         Fakettp::Simulator.stub!(:verify).and_return false
@@ -148,7 +148,7 @@ describe 'Controller' do
         do_get
         @response.status.should == 500
       end
-    
+
       it 'should list the errors' do
         do_get
         @response.body.should == @errors

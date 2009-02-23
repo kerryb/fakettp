@@ -6,17 +6,19 @@ module Fakettp
     end
     
     def self.verify
-      Error.list.empty?
+      Error.empty?
     end
     
     def self.<< expectation
       Expectation.create expectation
     end
     
-    def self.run_expectation
+    def self.handle_request
+      Expectation.next.execute
     end
     
     def self.list_errors
+      Error.list
     end
   end
 end
