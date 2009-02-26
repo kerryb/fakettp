@@ -79,7 +79,7 @@ describe 'Controller' do
 
       describe 'when the simulator returns an error' do
         before do
-          Fakettp::Simulator.stub!(:handle_request).and_raise
+          Fakettp::Simulator.stub!(:handle_request).and_raise Fakettp::Expectation::Error
         end
 
         it 'should return a 500 status' do

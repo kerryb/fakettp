@@ -54,14 +54,16 @@ describe Fakettp::Expectation do
     describe 'when there are remaining expectations' do
       before do
         setup_files '3', '4'
-        @expectation = "foo\nbar"
+        @contents = "foo\nbar"
         File.open File.join(@expectation_dir, '2'), 'w' do |f|
-          f.write @expectation
+          f.write @contents
         end
       end
   
-      it 'should return the contents of the first file' do
-        Fakettp::Expectation.next.should == @expectation
+      it 'should return an expectation with the contents of the first file' do
+        expectation = stub :expectation
+        Fakettp::Expectation.stub!(:new).with(@contents).and_return expectation
+        Fakettp::Expectation.next.should == expectation
       end
     
       it 'should delete the file' do
@@ -70,12 +72,20 @@ describe Fakettp::Expectation do
       end
     end
 
-    describe 'when there are remaining expectations' do
-      it 'should throw an exception or something'
+    describe 'when there are no remaining expectations' do
+      before do
+        setup_files
+      end
+      
+      it 'should raise an error' do
+        lambda {Fakettp::Expectation.next}.should raise_error(Fakettp::Expectation::Error)
+      end
     end
   end
   
   describe 'executing' do
-    it 'should have behaviour'
+    it 'should eval the expectation code' do
+      Fakettp::Expectation.new('2 + 2').execute.should == 4
+    end
   end
 end

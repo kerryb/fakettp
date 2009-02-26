@@ -1,5 +1,5 @@
 module Fakettp
-  class Simulator
+  class Simulator    
     def self.reset
       Expectation.clear_all
       Error.clear_all
