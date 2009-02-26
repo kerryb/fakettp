@@ -66,6 +66,7 @@ describe 'Controller' do
     describe "receiving an arbitrary #{verb}" do
       before do
         Fakettp::Simulator.stub! :handle_request
+        Fakettp::Simulator.stub! :record_error
       end
 
       define_method :do_request do
@@ -80,6 +81,11 @@ describe 'Controller' do
       describe 'when the simulator returns an error' do
         before do
           Fakettp::Simulator.stub!(:handle_request).and_raise Fakettp::Expectation::Error
+        end
+
+        it 'should record an error' do
+          Fakettp::Simulator.should_receive(:record_error)
+          do_request
         end
 
         it 'should return a 500 status' do

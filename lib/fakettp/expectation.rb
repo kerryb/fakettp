@@ -29,7 +29,7 @@ module Fakettp
       Expectation.new contents
     end
     
-    # ---- private below ----
+    private
     
     def self.next_file_to_create
       name = (Dir.entries(EXPECTATION_DIR).last.to_i + 1).to_s
