@@ -1,6 +1,8 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe 'Controller' do
+  include Sinatra::Test
+  
   describe 'posting to /reset' do
     before do
       Fakettp::Simulator.stub! :reset
