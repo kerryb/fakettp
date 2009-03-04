@@ -67,7 +67,6 @@ describe 'Controller' do
   %w(GET POST PUT DELETE HEAD).each do |verb|
     describe "receiving an arbitrary #{verb}" do
       before do
-        Fakettp::Simulator.stub! :handle_request
         Fakettp::Simulator.stub! :record_error
       end
 
@@ -76,7 +75,7 @@ describe 'Controller' do
       end
 
       it 'should simulate handling the request' do
-        Fakettp::Simulator.should_receive :handle_request
+        Fakettp::Simulator.should_receive(:handle_request).and_return ' '
         do_request
       end
 
