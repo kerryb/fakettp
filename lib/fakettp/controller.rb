@@ -31,8 +31,8 @@ end
   send method, '/**' do
     begin
       Fakettp::Simulator.handle_request
-    rescue Fakettp::Expectation::Error
-      Fakettp::Simulator.record_error
+    rescue Fakettp::Expectation::Error => e
+      Fakettp::Simulator.record_error e
       content_type 'text/plain'
       throw :halt, [500, "Simulator received mismatched request\n"]
     end

@@ -81,11 +81,12 @@ describe 'Controller' do
 
       describe 'when the simulator returns an error' do
         before do
-          Fakettp::Simulator.stub!(:handle_request).and_raise Fakettp::Expectation::Error
+          @error = Fakettp::Expectation::Error.new('foo')
+          Fakettp::Simulator.stub!(:handle_request).and_raise @error
         end
 
         it 'should record an error' do
-          Fakettp::Simulator.should_receive(:record_error)
+          Fakettp::Simulator.should_receive(:record_error).with @error
           do_request
         end
 

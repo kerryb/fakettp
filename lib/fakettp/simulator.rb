@@ -17,6 +17,10 @@ module Fakettp
       Expectation.next.execute
     end
     
+    def self.record_error exception
+      Error << exception.message
+    end
+    
     def self.list_errors
       Error.list
     end

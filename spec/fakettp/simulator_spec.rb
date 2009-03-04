@@ -80,6 +80,14 @@ describe Fakettp::Simulator do
     end
   end
   
+  describe 'recording an error' do
+    it 'should create a new error with the exception message' do
+      error = Fakettp::Expectation::Error.new('foo')
+      Fakettp::Error.should_receive(:<<).with 'foo'
+      Fakettp::Simulator.record_error error
+    end
+  end
+  
   describe 'listing errors' do
     before do
       @errors = stub :errors
