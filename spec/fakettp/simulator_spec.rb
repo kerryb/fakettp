@@ -32,7 +32,7 @@ describe Fakettp::Simulator do
     end
     
     it 'should create a new expectation' do
-      Fakettp::Expectation.should_receive(:create).with @expectation
+      Fakettp::Expectation.should_receive(:<<).with @expectation
       do_add
     end
   end
@@ -63,19 +63,38 @@ describe Fakettp::Simulator do
       Fakettp::Simulator.verify
     end
     
-    describe 'when there are no errors' do
+    describe 'when there are pending expectations' do
       before do
-        Fakettp::Error.stub!(:empty?).and_return true
+        Fakettp::Expectation.stub!(:empty?).and_return true
       end
       
-      it { do_verify.should be_true }
+      describe 'when there are no errors' do
+        before do
+          Fakettp::Error.stub!(:empty?).and_return true
+        end
+      
+        it { do_verify.should be_true }
+      end
+    
+      describe 'when there are errors' do
+        before do
+          Fakettp::Error.stub!(:empty?).and_return false
+        end
+      
+        it { do_verify.should be_false }
+      end
     end
     
-    describe 'when there are errors' do
+    describe 'when there are pending expectations' do
       before do
-        Fakettp::Error.stub!(:empty?).and_return false
+        Fakettp::Expectation.stub!(:empty?).and_return false
       end
       
+      it 'should add an error' do
+        Fakettp::Error.should_receive(:<<).with 'Expected request not received'
+        do_verify
+      end
+
       it { do_verify.should be_false }
     end
   end

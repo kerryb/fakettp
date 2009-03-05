@@ -2,7 +2,7 @@ module Fakettp
   class Expectation
     class Error < RuntimeError;end
     
-    EXPECTATION_DIR = FAKETTP_BASE + '/expectations'
+    EXPECTATION_DIR = File.join FAKETTP_BASE, 'tmp', 'expectations'
     
     def initialize contents
       @contents = contents
@@ -14,6 +14,10 @@ module Fakettp
     
     def self.clear_all
       FileUtils.rm_rf Dir.glob(File.join(EXPECTATION_DIR, '*'))
+    end
+    
+    def self.empty?
+      files.empty?
     end
     
     def self.<< expectation
@@ -29,19 +33,31 @@ module Fakettp
       Expectation.new contents
     end
     
+    def expect label
+      begin
+        yield
+      rescue Exception => e
+        Fakettp::Error << "Error in #{label}: #{e.message}"
+      end
+    end
+    
     private
     
     def self.next_file_to_create
-      name = (Dir.entries(EXPECTATION_DIR).last.to_i + 1).to_s
+      name = (files.last.to_i + 1).to_s
       File.join EXPECTATION_DIR, name
     end
     
     def self.next_file_to_read
-      name = Dir.entries(EXPECTATION_DIR)[2] # ignore . and ..
+      name = files.first
       raise Error unless name
       File.join EXPECTATION_DIR, name
     end
+    
+    def self.files
+      Dir.entries(EXPECTATION_DIR) - ['.', '..']
+    end
   
-    private_class_method :next_file_to_create, :next_file_to_read
+    private_class_method :next_file_to_create, :next_file_to_read, :files
   end
 end

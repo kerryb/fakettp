@@ -6,11 +6,12 @@ module Fakettp
     end
     
     def self.verify
+      Error << 'Expected request not received' unless Expectation.empty?
       Error.empty?
     end
     
     def self.<< expectation
-      Expectation.create expectation
+      Expectation << expectation
     end
     
     def self.handle_request

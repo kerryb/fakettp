@@ -37,8 +37,13 @@ spec = Gem::Specification.new do |s|
   s.rubyforge_project = GEM # GitHub bug, gem isn't being built when this is missed
 end
 
-desc 'run specs and create gem'
-task :default => [:spec, :create_readme, :test_install, :features]
+desc 'remove all build products'
+task :clean do
+  Fileutils.rm_rf %w(install README.html coverage pkg)
+end
+
+desc 'run specs, create gem, install and test'
+task :default => [:verify_rcov, :create_readme, :test_install, :features]
 
 desc 'run integration tests'
 Cucumber::Rake::Task.new do |t|

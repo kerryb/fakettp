@@ -2,10 +2,6 @@ require 'sinatra'
 Sinatra::Default.set :run, false
 Sinatra::Default.set :environment, ENV['RACK_ENV']
 
-error do
-  request.env['sinatra.error'].inspect
-end
-
 post '/expect' do
   Fakettp::Simulator << request.body.read
   content_type 'text/plain'

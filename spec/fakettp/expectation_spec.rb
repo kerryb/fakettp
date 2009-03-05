@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Fakettp::Expectation do
   before :all do
-    @expectation_dir = File.join FAKETTP_BASE, 'expectations'
+    @expectation_dir = File.join FAKETTP_BASE, 'tmp', 'expectations'
     FileUtils.mkdir_p @expectation_dir
   end
   
@@ -21,6 +21,28 @@ describe Fakettp::Expectation do
     it 'should remove the contents of tmp/expectations' do
       Fakettp::Expectation.clear_all
       Dir.glob(File.join(@expectation_dir, '**', '*')).should be_empty
+    end
+  end
+  
+  describe 'checking emptiness' do
+    describe 'when an expectation file exists' do
+      before do
+        setup_files '1', '2'
+      end
+      
+      it 'should return false' do
+        Fakettp::Expectation.should_not be_empty
+      end
+    end
+
+    describe 'when no expectation files exist' do
+      before do
+        setup_files
+      end
+      
+      it 'should return false' do
+        Fakettp::Expectation.should be_empty
+      end
     end
   end
   
@@ -86,6 +108,21 @@ describe Fakettp::Expectation do
   describe 'executing' do
     it 'should eval the expectation code' do
       Fakettp::Expectation.new('2 + 2').execute.should == 4
+    end
+  end
+  
+  describe 'an expect block in an expectation' do
+    describe 'when an exception occurs' do
+      it 'should record an error' do
+        Fakettp::Error.should_receive(:<<).with 'Error in foo: bar'
+        contents = <<EOF
+expect 'foo' do
+  raise Exception.new('bar')
+end
+EOF
+        expectation = Fakettp::Expectation.new contents
+        expectation.execute
+      end
     end
   end
 end
