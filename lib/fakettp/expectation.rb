@@ -1,6 +1,6 @@
 module Fakettp
   class Expectation
-    class Error < RuntimeError;end
+    class Error < RuntimeError; end
     
     EXPECTATION_DIR = File.join FAKETTP_BASE, 'tmp', 'expectations'
     
@@ -8,7 +8,8 @@ module Fakettp
       @contents = contents
     end
     
-    def execute
+    def execute request
+      @request = request
       eval @contents
     end
     
@@ -35,9 +36,9 @@ module Fakettp
     
     def expect label
       begin
-        yield
+        yield @request
       rescue Exception => e
-        Fakettp::Error << "Error in #{label}: #{e.message}"
+        raise Error, "Error in #{label}: #{e.message}", nil
       end
     end
     

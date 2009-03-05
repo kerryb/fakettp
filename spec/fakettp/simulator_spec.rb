@@ -39,22 +39,41 @@ describe Fakettp::Simulator do
   
   describe 'handling a request' do
     before do
+      @request = stub :request
       @result = 'foo'
       @expectation = mock Fakettp::Expectation, :execute => @result
       Fakettp::Expectation.stub!(:next).and_return @expectation
     end
     
     def do_handle
-      Fakettp::Simulator.handle_request
+      Fakettp::Simulator.handle_request @request
     end
     
     it 'should execute the next request' do
-      @expectation.should_receive :execute
+      @expectation.should_receive(:execute).with @request
       do_handle
     end
     
     it 'should return the execution result' do
       do_handle.should == @result
+    end
+    
+    describe 'when an expectation error occurs' do
+      before do
+        @expectation.stub!(:execute).and_raise Fakettp::Expectation::Error.new('foo')
+        Fakettp::Error.stub!(:<<)
+      end
+      
+      it 'should record the error' do
+        Fakettp::Error.should_receive(:<<).with 'foo'
+        begin
+          do_handle
+        rescue;end
+      end
+      
+      it 'should re-raise the exception' do
+        lambda {do_handle}.should raise_error(Fakettp::Expectation::Error, 'foo')
+      end
     end
   end
   
@@ -96,14 +115,6 @@ describe Fakettp::Simulator do
       end
 
       it { do_verify.should be_false }
-    end
-  end
-  
-  describe 'recording an error' do
-    it 'should create a new error with the exception message' do
-      error = Fakettp::Expectation::Error.new('foo')
-      Fakettp::Error.should_receive(:<<).with 'foo'
-      Fakettp::Simulator.record_error error
     end
   end
   

@@ -39,7 +39,7 @@ end
 
 desc 'remove all build products'
 task :clean do
-  Fileutils.rm_rf %w(install README.html coverage pkg)
+  FileUtils.rm_rf %w(install README.html coverage pkg)
 end
 
 desc 'run specs, create gem, install and test'
@@ -51,7 +51,7 @@ Cucumber::Rake::Task.new do |t|
 end
 
 desc 'Run specs'
-Spec::Rake::SpecTask.new do |t|
+Spec::Rake::SpecTask.new(:spec => :create_readme) do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
   t.spec_opts = %w(-fs --color)
   t.rcov = true

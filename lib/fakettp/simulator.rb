@@ -14,12 +14,13 @@ module Fakettp
       Expectation << expectation
     end
     
-    def self.handle_request
-      Expectation.next.execute
-    end
-    
-    def self.record_error exception
-      Error << exception.message
+    def self.handle_request request
+      begin
+        Expectation.next.execute request
+      rescue Fakettp::Expectation::Error => e
+        Error << e.message
+        raise e
+      end
     end
     
     def self.list_errors

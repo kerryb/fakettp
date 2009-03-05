@@ -26,9 +26,8 @@ end
 [:get, :post, :put, :delete, :head].each do |method|
   send method, '/**' do
     begin
-      Fakettp::Simulator.handle_request
+      Fakettp::Simulator.handle_request request
     rescue Fakettp::Expectation::Error => e
-      Fakettp::Simulator.record_error e
       content_type 'text/plain'
       throw :halt, [500, "Simulator received mismatched request\n"]
     end

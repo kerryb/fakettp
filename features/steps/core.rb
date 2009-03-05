@@ -21,7 +21,7 @@ Then /^verifying the simulator should report a failure, with message "(.*)"$/ do
   req = Net::HTTP::Get.new '/verify'
   resp = Net::HTTP.new('fakettp.local').start {|http| http.request(req) }
   resp.body.should =~ Regexp.new(message, Regexp::MULTILINE)
-  resp.class.should == Net::HTTPBadRequest
+  resp.class.should == Net::HTTPInternalServerError
 end
 
 When /^we request (\S*)$/ do |path|

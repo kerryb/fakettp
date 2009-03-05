@@ -106,23 +106,42 @@ describe Fakettp::Expectation do
   end
   
   describe 'executing' do
+    before do
+      @request = stub :request, :path => '/foo/bar'
+    end
+    
     it 'should eval the expectation code' do
-      Fakettp::Expectation.new('2 + 2').execute.should == 4
+      Fakettp::Expectation.new('2 + 2').execute(stub(:request)).should == 4
     end
   end
   
   describe 'an expect block in an expectation' do
+    before do
+      @request = stub :request, :path => '/foo/bar'
+    end
+    
+    it 'should be passed the request' do
+      contents = <<EOF
+expect 'foo' do |request|
+  request.path
+end
+EOF
+      expectation = Fakettp::Expectation.new contents
+      expectation.execute(@request).should == '/foo/bar'
+    end
+    
     describe 'when an exception occurs' do
       it 'should record an error' do
-        Fakettp::Error.should_receive(:<<).with 'Error in foo: bar'
         contents = <<EOF
-expect 'foo' do
+expect 'foo' do |request|
   raise Exception.new('bar')
 end
 EOF
         expectation = Fakettp::Expectation.new contents
-        expectation.execute
+        lambda {expectation.execute(@request)}.should raise_error(Fakettp::Expectation::Error)#, 'Error in foo: bar')
       end
+      
+      it 'should have a specific error message'
     end
   end
 end

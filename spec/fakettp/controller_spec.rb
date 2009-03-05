@@ -75,7 +75,7 @@ describe 'Controller' do
       end
 
       it 'should simulate handling the request' do
-        Fakettp::Simulator.should_receive(:handle_request).and_return ' '
+        Fakettp::Simulator.should_receive(:handle_request).with(an_instance_of(Sinatra::Request)).and_return ' '
         do_request
       end
 
@@ -83,11 +83,6 @@ describe 'Controller' do
         before do
           @error = Fakettp::Expectation::Error.new('foo')
           Fakettp::Simulator.stub!(:handle_request).and_raise @error
-        end
-
-        it 'should record an error' do
-          Fakettp::Simulator.should_receive(:record_error).with @error
-          do_request
         end
 
         it 'should return a 500 status' do
