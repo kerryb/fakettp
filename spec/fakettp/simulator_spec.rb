@@ -68,7 +68,7 @@ describe Fakettp::Simulator do
         Fakettp::Error.should_receive(:<<).with 'foo'
         begin
           do_handle
-        rescue;end
+        rescue Fakettp::Expectation::Error;end
       end
       
       it 'should re-raise the exception' do

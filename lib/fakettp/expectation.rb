@@ -2,7 +2,7 @@ require 'spec'
 
 module Fakettp
   class Expectation
-    class Error < RuntimeError; end
+    class Error < Exception; end
     
     EXPECTATION_DIR = File.join FAKETTP_BASE, 'tmp', 'expectations'
     
@@ -12,7 +12,8 @@ module Fakettp
     
     def execute request
       @request = request
-      eval @contents
+      eval @contents, Proc.new {} # don't want the context of this file reported in exceptions
+      # TODO: Include context of expectation file
     end
     
     def self.clear_all
@@ -40,7 +41,7 @@ module Fakettp
       begin
         yield @request
       rescue Exception => e
-        raise Error, "Error in #{label}: #{e.message}", nil
+        raise Error.new("Error in #{label}: #{e.message}")
       end
     end
     
