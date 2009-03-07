@@ -1,3 +1,5 @@
+require 'spec'
+
 module Fakettp
   class Expectation
     class Error < RuntimeError; end
@@ -51,7 +53,7 @@ module Fakettp
     
     def self.next_file_to_read
       name = files.first
-      raise Error unless name
+      raise Error.new('Received unexpected request') unless name
       File.join EXPECTATION_DIR, name
     end
     

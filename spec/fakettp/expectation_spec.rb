@@ -100,8 +100,10 @@ describe Fakettp::Expectation do
       end
       
       it 'should raise an error' do
-        lambda {Fakettp::Expectation.next}.should raise_error(Fakettp::Expectation::Error)
+        lambda {Fakettp::Expectation.next}.should raise_error(Fakettp::Expectation::Error)#, 'Received unexpected request')
       end
+      
+      it 'should have a specific error message'
     end
   end
   
@@ -130,11 +132,11 @@ EOF
       expectation.execute(@request).should == '/foo/bar'
     end
     
-    describe 'when an exception occurs' do
-      it 'should record an error' do
+    describe 'when a matcher exception occurs' do
+      it 'should raise an exception' do
         contents = <<EOF
 expect 'foo' do |request|
-  raise Exception.new('bar')
+  1.should == 2
 end
 EOF
         expectation = Fakettp::Expectation.new contents
