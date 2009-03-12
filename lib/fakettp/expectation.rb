@@ -10,8 +10,8 @@ module Fakettp
       @contents = contents
     end
     
-    def execute request
-      @request = request
+    def execute request, response
+      @request, @response = request, response
       eval @contents, Proc.new {} # don't want the context of this file reported in exceptions
       # TODO: Include context of expectation file
     end
@@ -39,7 +39,7 @@ module Fakettp
     
     def expect label
       begin
-        yield @request
+        yield @request, @response
       rescue Exception => e
         raise Error.new("Error in #{label}: #{e.message}")
       end

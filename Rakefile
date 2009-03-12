@@ -45,11 +45,6 @@ end
 desc 'run specs, create gem, install and test'
 task :default => [:verify_rcov, :create_readme, :test_install, :features]
 
-desc 'run integration tests'
-Cucumber::Rake::Task.new do |t|
-  t.cucumber_opts = "--format pretty"
-end
-
 desc 'Run specs'
 Spec::Rake::SpecTask.new(:spec => :create_readme) do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
@@ -93,4 +88,9 @@ task :test_install => :install_gem do
   rm_rf 'install'
   system 'fakettp install install'
   touch 'install/tmp/restart.txt'
+end
+
+desc 'run integration tests'
+task :features do
+  system 'cucumber'
 end

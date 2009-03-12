@@ -40,17 +40,18 @@ describe Fakettp::Simulator do
   describe 'handling a request' do
     before do
       @request = stub :request
+      @response = stub :response
       @result = 'foo'
       @expectation = mock Fakettp::Expectation, :execute => @result
       Fakettp::Expectation.stub!(:next).and_return @expectation
     end
     
     def do_handle
-      Fakettp::Simulator.handle_request @request
+      Fakettp::Simulator.handle_request @request, @response
     end
     
     it 'should execute the next request' do
-      @expectation.should_receive(:execute).with @request
+      @expectation.should_receive(:execute).with @request, @response
       do_handle
     end
     

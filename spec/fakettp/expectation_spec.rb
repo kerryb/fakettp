@@ -107,39 +107,36 @@ describe Fakettp::Expectation do
   end
   
   describe 'executing' do
-    before do
-      @request = stub :request, :path => '/foo/bar'
-    end
-    
     it 'should eval the expectation code' do
-      Fakettp::Expectation.new('2 + 2').execute(stub(:request)).should == 4
+      Fakettp::Expectation.new('2 + 2').execute(stub(:request), stub(:response)).should == 4
     end
   end
   
   describe 'an expect block in an expectation' do
     before do
-      @request = stub :request, :path => '/foo/bar'
+      @request = stub :request, :foo => 'foo'
+      @response = stub :response, :foo => 'bar'
     end
     
-    it 'should be passed the request' do
+    it 'should be passed the request and response' do
       contents = <<EOF
-expect 'foo' do |request|
-  request.path
+expect 'foo' do |request, response|
+  request.foo + response.foo
 end
 EOF
       expectation = Fakettp::Expectation.new contents
-      expectation.execute(@request).should == '/foo/bar'
+      expectation.execute(@request, @response).should == 'foobar'
     end
     
     describe 'when a matcher exception occurs' do
       it 'should raise an exception' do
         contents = <<EOF
-expect 'foo' do |request|
+expect 'foo' do |request, response|
   1.should == 2
 end
 EOF
         expectation = Fakettp::Expectation.new contents
-        lambda {expectation.execute(@request)}.should raise_error(Fakettp::Expectation::Error,
+        lambda {expectation.execute(@request, @response)}.should raise_error(Fakettp::Expectation::Error,
             /Error in foo: expected: 2,\s*got: 1/)
       end
     end

@@ -75,7 +75,9 @@ describe 'Controller' do
       end
 
       it 'should simulate handling the request' do
-        Fakettp::Simulator.should_receive(:handle_request).with(an_instance_of(Sinatra::Request)).and_return ' '
+        Fakettp::Simulator.should_receive(:handle_request).with(
+            an_instance_of(Sinatra::Request), an_instance_of(Sinatra::Response)
+          ).and_return ' '
         do_request
       end
 
