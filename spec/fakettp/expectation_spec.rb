@@ -100,45 +100,18 @@ describe Fakettp::Expectation do
       end
       
       it 'should raise an error' do
-        lambda {Fakettp::Expectation.next}.should raise_error(Fakettp::Expectation::Error,
+        lambda { Fakettp::Expectation.next }.should raise_error(Fakettp::Expectation::Error,
             'Received unexpected request')
       end
     end
   end
   
   describe 'executing' do
-    it 'should eval the expectation code' do
-      Fakettp::Expectation.new('2 + 2').execute(stub(:request), stub(:response)).should == 4
-    end
-  end
-  
-  describe 'an expect block in an expectation' do
-    before do
-      @request = stub :request, :foo => 'foo'
-      @response = stub :response, :foo => 'bar'
-    end
-    
-    it 'should be passed the request and response' do
-      contents = <<EOF
-expect 'foo' do |request, response|
-  request.foo + response.foo
-end
-EOF
-      expectation = Fakettp::Expectation.new contents
-      expectation.execute(@request, @response).should == 'foobar'
-    end
-    
-    describe 'when a matcher exception occurs' do
-      it 'should raise an exception' do
-        contents = <<EOF
-expect 'foo' do |request, response|
-  1.should == 2
-end
-EOF
-        expectation = Fakettp::Expectation.new contents
-        lambda {expectation.execute(@request, @response)}.should raise_error(Fakettp::Expectation::Error,
-            /Error in foo: expected: 2,\s*got: 1/)
+    it 'should eval the expectation code in the context of the supplied binding' do
+      def getBinding(n)
+        return binding
       end
+      Fakettp::Expectation.new('n + 2').execute(getBinding(2)).should == 4
     end
   end
 end

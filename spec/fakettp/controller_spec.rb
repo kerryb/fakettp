@@ -76,8 +76,7 @@ describe 'Controller' do
 
       it 'should simulate handling the request' do
         Fakettp::Simulator.should_receive(:handle_request).with(
-            an_instance_of(Sinatra::Request), an_instance_of(Sinatra::Response)
-          ).and_return ' '
+            an_instance_of(Binding)).and_return ' '
         do_request
       end
 
@@ -103,6 +102,19 @@ describe 'Controller' do
             @response.body.should == "Simulator received mismatched request\n"
           end
         end
+      end
+    end
+  end
+
+  describe 'an expect block (called from expectation)' do
+    describe 'when a matcher exception occurs' do
+      it 'should raise an exception' do
+        lambda {
+          expect 'foo' do
+            1.should == 2
+          end
+        }.should raise_error(Fakettp::Expectation::Error,
+            /Error in foo: expected: 2,\s*got: 1/)
       end
     end
   end

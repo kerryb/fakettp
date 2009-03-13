@@ -14,9 +14,9 @@ module Fakettp
       Expectation << expectation
     end
     
-    def self.handle_request request, response
+    def self.handle_request binding
       begin
-        Expectation.next.execute request, response
+        Expectation.next.execute binding
       rescue Fakettp::Expectation::Error => e
         Error << e.message
         raise e

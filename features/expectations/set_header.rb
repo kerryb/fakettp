@@ -1,3 +1,3 @@
-expect "Set header" do |request, response|
+expect "Set header" do
   response['foo'] = 'bar'
 end

@@ -1,5 +1,3 @@
-require 'spec'
-
 module Fakettp
   class Expectation
     class Error < Exception; end
@@ -10,9 +8,8 @@ module Fakettp
       @contents = contents
     end
     
-    def execute request, response
-      @request, @response = request, response
-      eval @contents, Proc.new {} # don't want the context of this file reported in exceptions
+    def execute binding
+      eval @contents, binding
       # TODO: Include context of expectation file
     end
     
@@ -35,14 +32,6 @@ module Fakettp
       contents = File.read file
       FileUtils.rm file
       Expectation.new contents
-    end
-    
-    def expect label
-      begin
-        yield @request, @response
-      rescue Exception => e
-        raise Error.new("Error in #{label}: #{e.message}")
-      end
     end
     
     private

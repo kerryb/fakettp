@@ -1,3 +1,3 @@
-expect "GET /" do |request, response|
+expect "GET /" do
   request.path_info.should == '/'
 end

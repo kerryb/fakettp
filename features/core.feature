@@ -56,7 +56,11 @@ Feature: Mocking an HTTP server
     And verifying the simulator should report success
     
   Scenario: Setting response content-type
-    Given this needs to be implemented
+    Given the simulator is reset
+    And we expect set_content_type
+    And we request /
+    Then the response should have a content type of application/xml
+    And verifying the simulator should report success
     
   Scenario: Setting response code
     Given this needs to be implemented
