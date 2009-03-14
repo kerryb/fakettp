@@ -1,3 +1,5 @@
 tmp/**
 pkg
 install
+coverage
+tmtags

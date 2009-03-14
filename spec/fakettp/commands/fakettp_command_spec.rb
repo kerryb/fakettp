@@ -90,4 +90,12 @@ describe Fakettp::Commands::FakettpCommand do
       end
     end
   end
+  
+  describe 'with an unrecognised command' do
+    before do
+      @command = Fakettp::Commands::FakettpCommand.new(['wibble'])
+    end
+    
+    it_should_behave_like 'incorrect usage'
+  end
 end

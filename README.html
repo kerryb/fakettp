@@ -47,7 +47,7 @@
   end
 </code></pre>
 <p>The label on the first line is used in error reporting.</p>
-<p>The expectation code has access to the underlying Sinatra/Rack stuff (this will be tidied up at some point), as well as <a href="http://rspec.info">RSpec</a> matchers.</p>
+<p>The expectation code has access to the underlying Sinatra request and response objects etc, as well as <a href="http://rspec.info">RSpec</a> matchers.</p>
 <h3>Verifying</h3>
 <p>To verify that all expectations have been met, make an <span class="caps">HTTP</span> <span class="caps">GET</span> request to <code>http://fakettp.local/verify</code>.</p>
 <p>If all is well, the response will be a <em>200 OK</em> with a body of &#8216;OK&#8217;. Otherwise the status will be <em>400 Bad Request</em>, with a list of failures in the body. The failure messages include the complete details of the unexpected request that was received, to assist debugging.</p>
@@ -55,6 +55,11 @@
 <p>To have FakeTTP respond to multiple hostnames, create the appropriate hosts entries. If you&#8217;re using name-based virtual hosts in Apache, add a <em>ServerAlias</em> entry to the virtual host config, under the <em>ServerName</em> line, eg:</p>
 <p><code>ServerAlias foo.com bar.com</code></p>
 <h2>Change log</h2>
+<p>0.2 (14 Mar 2009)</p>
+<ul>
+	<li>Complete rewrite, with tests and classes and stuff this time.</li>
+</ul>
+<p>If you get an &#8216;unexpected return&#8217; error, remove the return statement from your expectation, and just put the return value on the last line of the <em>expect</em> block.</p>
 <p>0.1.2 (13 Feb 2009)</p>
 <ul>
 	<li>Make sure <span class="caps">README</span>.html appears in generated gem</li>
@@ -69,10 +74,8 @@
 </ul>
 <h2>To Do</h2>
 <ul>
-	<li>Increase test coverage</li>
-	<li>Refactor to be OO rather than dumping everything in Kernel</li>
 	<li>Add examples</li>
-	<li>Only respond to control requests (reset/expect/verify) on main hostname only</li>
+	<li>Only respond to control requests (reset/expect/verify) on main hostname</li>
 	<li>Make control requests RESTful?</li>
 	<li>Make main hostname configurable?</li>
 	<li>Show label in verification error for expected requests that weren&#8217;t received</li>
@@ -80,4 +83,6 @@
 	<li>Allow more flexibility in request ordering</li>
 	<li>Allow user-specific helper files in installation dir</li>
 	<li>Check install/run behaviour when development dependencies are not installed</li>
+	<li>Provide Ruby <span class="caps">API</span> to set expectations etc</li>
+	<li>Return the expected content type even if expectation fails</li>
 </ul>

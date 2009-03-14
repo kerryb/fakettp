@@ -47,3 +47,24 @@ Feature: Mocking an HTTP server
     When we request /foo
     And we request /
     Then verifying the simulator should report a failure, with message "Error in GET /: expected: "/",.*got: "/foo".*Error in GET /foo: expected: "/foo",.*got: "/""
+    
+  Scenario: Setting response headers
+    Given the simulator is reset
+    And we expect set_response
+    And we request /
+    Then the response should have a 'foo' header with a value of 'bar'
+    And verifying the simulator should report success
+    
+  Scenario: Setting response content-type
+    Given the simulator is reset
+    And we expect set_response
+    And we request /
+    Then the response should have a content type of 'application/xml'
+    And verifying the simulator should report success
+    
+  Scenario: Setting response code
+    Given the simulator is reset
+    And we expect set_response
+    And we request /
+    Then the response should have a body of '<foo />'
+    And verifying the simulator should report success

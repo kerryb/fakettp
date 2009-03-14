@@ -78,7 +78,7 @@ The supplied code should be in the following format, and will generally consist 
 
 The label on the first line is used in error reporting.
 
-The expectation code has access to the underlying Sinatra/Rack stuff (this will be tidied up at some point), as well as "RSpec":http://rspec.info matchers.
+The expectation code has access to the underlying Sinatra request and response objects etc, as well as "RSpec":http://rspec.info matchers.
 
 h3. Verifying
 
@@ -94,6 +94,12 @@ To have FakeTTP respond to multiple hostnames, create the appropriate hosts entr
 
 h2. Change log
 
+0.2 (14 Mar 2009)
+
+* Complete rewrite, with tests and classes and stuff this time.
+
+If you get an 'unexpected return' error, remove the return statement from your expectation, and just put the return value on the last line of the _expect_ block.
+
 0.1.2 (13 Feb 2009)
 
 * Make sure README.html appears in generated gem
@@ -108,10 +114,8 @@ h2. Change log
 
 h2. To Do
 
-* Increase test coverage
-* Refactor to be OO rather than dumping everything in Kernel
 * Add examples
-* Only respond to control requests (reset/expect/verify) on main hostname only
+* Only respond to control requests (reset/expect/verify) on main hostname
 * Make control requests RESTful?
 * Make main hostname configurable?
 * Show label in verification error for expected requests that weren't received
@@ -119,3 +123,5 @@ h2. To Do
 * Allow more flexibility in request ordering
 * Allow user-specific helper files in installation dir
 * Check install/run behaviour when development dependencies are not installed
+* Provide Ruby API to set expectations etc
+* Return the expected content type even if expectation fails

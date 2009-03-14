@@ -4,7 +4,7 @@ Given /^the simulator is reset$/ do
 end
 
 Given /^we expect (\S*)$/ do |filename|
-  body = File.read(File.dirname(__FILE__) + "/../expectations/#{filename}")
+  body = File.read(File.dirname(__FILE__) + "/../expectations/#{filename}.rb")
   req = Net::HTTP::Post.new '/expect', {'Content-Type' => 'text/plain'}
   req.body = body
   Net::HTTP.new('fakettp.local').start {|http| http.request(req) }
@@ -21,11 +21,22 @@ Then /^verifying the simulator should report a failure, with message "(.*)"$/ do
   req = Net::HTTP::Get.new '/verify'
   resp = Net::HTTP.new('fakettp.local').start {|http| http.request(req) }
   resp.body.should =~ Regexp.new(message, Regexp::MULTILINE)
-  resp.class.should == Net::HTTPBadRequest
+  resp.class.should == Net::HTTPInternalServerError
 end
 
 When /^we request (\S*)$/ do |path|
   req = Net::HTTP::Get.new path
-  Net::HTTP.new('fakettp.local').start {|http| http.request(req) }
+  @@response = Net::HTTP.new('fakettp.local').start {|http| http.request(req) }
 end
 
+Then /^the response should have a '(.*)' header with a value of '(.*)'$/ do |name, value|
+  @@response[name].should == value
+end
+
+Then /^the response should have a content type of '(.*)'$/ do |value|
+  @@response.content_type.should == value
+end
+
+Then /^the response should have a body of '(.*)'$/ do |value|
+  @@response.body.should == value
+end
