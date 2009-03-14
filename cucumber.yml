@@ -1,1 +1,1 @@
-default: --require features/steps features
+default: --require features/support --require features/step_definitions features
