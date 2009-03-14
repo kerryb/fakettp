@@ -29,6 +29,14 @@ When /^we request (\S*)$/ do |path|
   @@response = Net::HTTP.new('fakettp.local').start {|http| http.request(req) }
 end
 
-Then /^the response should have a (.*) header with a value of (.*)$/ do |name, value|
+Then /^the response should have a '(.*)' header with a value of '(.*)'$/ do |name, value|
   @@response[name].should == value
+end
+
+Then /^the response should have a content type of '(.*)'$/ do |value|
+  @@response.content_type.should == value
+end
+
+Then /^the response should have a body of '(.*)'$/ do |value|
+  @@response.body.should == value
 end

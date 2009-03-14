@@ -50,18 +50,21 @@ Feature: Mocking an HTTP server
     
   Scenario: Setting response headers
     Given the simulator is reset
-    And we expect set_header
+    And we expect set_response
     And we request /
-    Then the response should have a foo header with a value of bar
+    Then the response should have a 'foo' header with a value of 'bar'
     And verifying the simulator should report success
     
   Scenario: Setting response content-type
     Given the simulator is reset
-    And we expect set_content_type
+    And we expect set_response
     And we request /
-    Then the response should have a content type of application/xml
+    Then the response should have a content type of 'application/xml'
     And verifying the simulator should report success
     
   Scenario: Setting response code
-    Given this needs to be implemented
-  
+    Given the simulator is reset
+    And we expect set_response
+    And we request /
+    Then the response should have a body of '<foo />'
+    And verifying the simulator should report success
