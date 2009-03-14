@@ -1,3 +1,6 @@
+require 'fakettp/expectation'
+require 'fakettp/error'
+
 module Fakettp
   class Simulator    
     def self.reset

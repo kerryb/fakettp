@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.default_executable = %q{fakettp}
   s.email = %q{kerryjbuckley@gmail.com}
   s.executables = ["fakettp"]
-  s.files = ["lib/fakettp", "lib/fakettp/commands", "lib/fakettp/commands/fakettp_command.rb", "lib/fakettp/config.ru", "lib/fakettp/controller.rb", "lib/fakettp/error.rb", "lib/fakettp/expectation.rb", "lib/fakettp/simulator.rb", "lib/fakettp.rb", "bin/fakettp", "README.html"]
+  s.files = ["lib/fakettp", "lib/fakettp/commands", "lib/fakettp/commands/fakettp_command.rb", "lib/fakettp/config.ru", "lib/fakettp/controller.rb", "lib/fakettp/error.rb", "lib/fakettp/expectation.rb", "lib/fakettp/expectation_helper.rb", "lib/fakettp/simulator.rb", "lib/fakettp.rb", "bin/fakettp", "README.html"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/kerryb/fakettp/}
   s.require_paths = ["lib"]

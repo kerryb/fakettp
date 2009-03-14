@@ -3,6 +3,10 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe 'Controller' do
   include Sinatra::Test
   
+  it 'should mix in Fakettp::ExpectationHelper' do
+    Sinatra::Application.included_modules.should include(Fakettp::ExpectationHelper)
+  end
+  
   describe 'posting to /reset' do
     before do
       Fakettp::Simulator.stub! :reset
@@ -102,19 +106,6 @@ describe 'Controller' do
             @response.body.should == "Simulator received mismatched request\n"
           end
         end
-      end
-    end
-  end
-
-  describe 'an expect block (called from expectation)' do
-    describe 'when a matcher exception occurs' do
-      it 'should raise an exception' do
-        lambda {
-          expect 'foo' do
-            1.should == 2
-          end
-        }.should raise_error(Fakettp::Expectation::Error,
-            /Error in foo: expected: 2,\s*got: 1/)
       end
     end
   end

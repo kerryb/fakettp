@@ -3,6 +3,12 @@ require 'spec'
 Sinatra::Default.set :run, false
 Sinatra::Default.set :environment, ENV['RACK_ENV']
 
+require 'fakettp/expectation_helper'
+require 'fakettp/simulator'
+require 'fakettp/expectation'
+
+include Fakettp::ExpectationHelper
+
 post '/expect' do
   Fakettp::Simulator << request.body.read
   content_type 'text/plain'
@@ -32,13 +38,5 @@ end
       content_type 'text/plain'
       throw :halt, [500, "Simulator received mismatched request\n"]
     end
-  end
-end
-
-def expect label
-  begin
-    yield
-  rescue Exception => e
-    raise Fakettp::Expectation::Error.new("Error in #{label}: #{e.message}")
   end
 end
