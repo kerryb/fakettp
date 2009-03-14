@@ -11,7 +11,7 @@ $:.unshift(File.dirname(__FILE__) + '/../../lib')
  
 GEM = "fakettp"
 GITHUB_USER = "kerryb"
-GEM_VERSION = "0.1.2"
+GEM_VERSION = "0.2"
 SUMMARY = "HTTP server mocking tool"
 AUTHOR = "Kerry Buckley"
 EMAIL = "kerryjbuckley@gmail.com"
@@ -23,7 +23,7 @@ spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.summary = SUMMARY
   s.has_rdoc = true
-  s.add_dependency('sinatra', '>=0.3.0')
+  s.add_dependency('sinatra', '>=0.9.1')
   s.add_development_dependency('rspec', '>=1.1.12')
   s.add_development_dependency('spicycode-rcov', '>=0.8.0')
   s.add_development_dependency('cucumber', '>=0.1.16')
