@@ -17,7 +17,6 @@ describe Fakettp::ExpectationHelper do
       it 'should return the value' do
         result = expect 'foo' do
           'bar'
-          # return 'bar' FIXME
         end
         result.should == 'bar'
       end
