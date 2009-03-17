@@ -1,4 +1,3 @@
-<p><!-- README.html is generated from README.textile --></p>
 <h1>FakeTTP</h1>
 <h2>Purpose</h2>
 <p>When you are writing acceptance/integration tests for an application which makes <span class="caps">HTTP</span> requests to a remote application, sometimes you need to be able to test the interactions in different scenarios without talking to a real instance of the remote application.</p>
@@ -55,6 +54,10 @@
 <p>To have FakeTTP respond to multiple hostnames, create the appropriate hosts entries. If you&#8217;re using name-based virtual hosts in Apache, add a <em>ServerAlias</em> entry to the virtual host config, under the <em>ServerName</em> line, eg:</p>
 <p><code>ServerAlias foo.com bar.com</code></p>
 <h2>Change log</h2>
+<p>0.2.1 (17 Mar 2009)</p>
+<ul>
+	<li>Fixed issue where rspec matchers weren&#8217;t available to expectations</li>
+</ul>
 <p>0.2 (14 Mar 2009)</p>
 <ul>
 	<li>Complete rewrite, with tests and classes and stuff this time.</li>
