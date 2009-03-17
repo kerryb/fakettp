@@ -11,7 +11,7 @@ $:.unshift(File.dirname(__FILE__) + '/../../lib')
  
 GEM = "fakettp"
 GITHUB_USER = "kerryb"
-GEM_VERSION = "0.2"
+GEM_VERSION = "0.2.1"
 SUMMARY = "HTTP server mocking tool"
 AUTHOR = "Kerry Buckley"
 EMAIL = "kerryjbuckley@gmail.com"

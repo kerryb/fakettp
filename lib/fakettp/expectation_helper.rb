@@ -2,6 +2,10 @@ require 'fakettp/expectation'
 
 module Fakettp
   module ExpectationHelper
+    def self.included(cls)
+      cls.send :include, Spec::Matchers
+    end
+  
     def expect label
       begin
         yield

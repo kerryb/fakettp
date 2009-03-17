@@ -48,6 +48,12 @@ Feature: Mocking an HTTP server
     And we request /
     Then verifying the simulator should report a failure, with message "Error in GET /: expected: "/",.*got: "/foo".*Error in GET /foo: expected: "/foo",.*got: "/""
     
+  Scenario: Using rspec matchers
+    Given the simulator is reset
+    And we expect expect_get
+    And we request /
+    Then verifying the simulator should report success
+    
   Scenario: Setting response headers
     Given the simulator is reset
     And we expect set_response

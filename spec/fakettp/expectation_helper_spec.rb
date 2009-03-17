@@ -1,6 +1,14 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Fakettp::ExpectationHelper do
+  it 'should mix in Spec::Matchers' do
+    class Foo
+      include Fakettp::ExpectationHelper
+    end
+    
+    Foo.included_modules.should include(Spec::Matchers)
+  end
+  
   describe 'calling expect' do
     describe 'when a matcher exception occurs' do
       it 'should raise an exception' do

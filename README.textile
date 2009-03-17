@@ -1,5 +1,3 @@
-<!-- README.html is generated from README.textile -->
-
 h1. FakeTTP
 
 h2. Purpose
@@ -93,6 +91,10 @@ To have FakeTTP respond to multiple hostnames, create the appropriate hosts entr
 @ServerAlias foo.com bar.com@
 
 h2. Change log
+
+0.2.1 (17 Mar 2009)
+
+* Fixed issue where rspec matchers weren't available to expectations
 
 0.2 (14 Mar 2009)
 
