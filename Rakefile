@@ -76,15 +76,26 @@ task :make_spec do
     file.puts spec.to_ruby
   end
 end
- 
-desc "Install the gem locally"
-task :install_gem => [:make_spec, :repackage] do
-  system %{sudo gem uninstall -xa #{GEM} #{GITHUB_USER}-#{GEM}}
-  sh %{sudo gem install -l pkg/#{GEM}-#{GEM_VERSION}}
+
+namespace :gem do
+  desc "Install the gem locally"
+  task :install => [:make_spec, :repackage, :uninstall] do
+    sh %{sudo gem install -l pkg/#{GEM}-#{GEM_VERSION}}
+  end
+  
+  desc 'Remove all installed versions of gem'
+  task :uninstall do
+    system %{sudo gem uninstall -xa #{GEM} #{GITHUB_USER}-#{GEM}}
+  end
+  
+  desc 'Revert to the public gem'
+  task :revert => :uninstall do
+    system %{sudo gem install -xa #{GITHUB_USER}-#{GEM}}
+  end
 end
 
 desc 'Install FakeTTP into local install directory'
-task :test_install => :install_gem do
+task :test_install => :'gem:install' do
   rm_rf 'install'
   system 'fakettp install install'
   touch 'install/tmp/restart.txt'
