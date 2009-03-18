@@ -9,19 +9,19 @@ require 'fakettp/expectation'
 
 include Fakettp::ExpectationHelper
 
-post '/expect' do
+post '/expect', :host => 'fakettp.local' do
   Fakettp::Simulator << request.body.read
   content_type 'text/plain'
   "Expect OK\n"
 end
 
-post '/reset' do
+post '/reset', :host => 'fakettp.local' do
   Fakettp::Simulator.reset
   content_type 'text/plain'
   "Reset OK\n"
 end
 
-get '/verify' do
+get '/verify', :host => 'fakettp.local' do
   content_type 'text/plain'
   if Fakettp::Simulator.verify
     "Verify OK\n"

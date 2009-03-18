@@ -1,0 +1,12 @@
+Feature: Controlling the simulator
+  Scenario: Attempting to reset the simulator using the wrong host
+    When we post to /reset on foo.fake.local
+    Then the response should have a body containing 'Simulator received mismatched request'
+    
+  Scenario: Attempting to create an expectation using the wrong host
+    When we post to /expect on foo.fake.local
+    Then the response should have a body containing 'Simulator received mismatched request'
+    
+  Scenario: Attempting to verify the simulator using the wrong host
+    When we get /verify on foo.fake.local
+    Then the response should have a body containing 'Simulator received mismatched request'

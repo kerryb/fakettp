@@ -90,7 +90,7 @@ namespace :gem do
   
   desc 'Revert to the public gem'
   task :revert => :uninstall do
-    system %{sudo gem install -xa #{GITHUB_USER}-#{GEM}}
+    system %{sudo gem install #{GITHUB_USER}-#{GEM}}
   end
 end
 
