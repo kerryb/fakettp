@@ -92,6 +92,10 @@ To have FakeTTP respond to multiple hostnames, create the appropriate hosts entr
 
 h2. Change log
 
+0.2.2 (18 Mar 2009)
+
+* Only accept control requests (reset, expect, verify) on fakettp.local
+
 0.2.1 (17 Mar 2009)
 
 * Fixed issue where rspec matchers weren't available to expectations
@@ -117,7 +121,6 @@ If you get an 'unexpected return' error, remove the return statement from your e
 h2. To Do
 
 * Add examples
-* Only respond to control requests (reset/expect/verify) on main hostname
 * Make control requests RESTful?
 * Make main hostname configurable?
 * Show label in verification error for expected requests that weren't received
