@@ -23,5 +23,5 @@ Feature: Expectations
     Given the simulator is reset
     And we expect set_response
     And we get / on foo.fake.local
-    Then the response should have a body of '<foo />'
+    Then the response body should be '<foo />'
     And verifying the simulator should report success

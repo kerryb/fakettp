@@ -7,6 +7,8 @@ require 'fakettp/expectation_helper'
 require 'fakettp/simulator'
 require 'fakettp/expectation'
 
+set :views, File.join(File.dirname(__FILE__), 'views')
+
 include Fakettp::ExpectationHelper
 
 post '/expect', :host => 'fakettp.local' do
@@ -28,6 +30,11 @@ get '/verify', :host => 'fakettp.local' do
   else
     throw :halt, [500, Fakettp::Simulator.list_errors]
   end
+end
+
+get '/', :host => 'fakettp.local' do
+  content_type 'text/html'
+  erb :index
 end
 
 [:get, :post, :put, :delete, :head].each do |method|

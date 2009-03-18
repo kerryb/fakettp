@@ -15,10 +15,14 @@ Then /^the response should have a content type of '(.*)'$/ do |value|
   @@response.content_type.should == value
 end
 
-Then /^the response should have a body of '(.*)'$/ do |value|
+Then /^the response body should be '(.*)'$/ do |value|
   @@response.body.should == value
 end
 
-Then /^the response should have a body containing '(.*)'$/ do |value|
+Then /^the response body should contain '(.*)'$/ do |value|
   @@response.body.should include(value)
+end
+
+Then /^(\S*) in the response should be '(.*)'$/ do |xpath, value|
+  xml_node_values(@@response.body, xpath).should include(value)
 end

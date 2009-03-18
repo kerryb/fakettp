@@ -190,4 +190,33 @@ describe 'Controller' do
       end
     end
   end
+
+  describe 'getting /' do
+    before do
+    end
+
+    describe 'on fakettp.local' do
+      def do_get
+        get '/', nil, :host => 'fakettp.local'
+      end
+
+      it 'should return an html response' do
+        do_get
+        response.content_type.should == 'text/html'
+      end
+      
+      it 'should render index.erb' do
+        do_get
+        # TODO: can't we mock the call to :erb somehow?
+        @response.body.should =~ /<title>FakeTTP<\/title>/
+      end
+    end
+    
+    describe 'on a host other than fakettp.local' do
+      it 'should act like any other simulated request' do
+        get '/', nil, :host => 'foo.fake.local'
+        response.body.should == "Simulator received mismatched request\n"
+      end
+    end
+  end
 end
