@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/../spec_helper'
+require 'hpricot'
 
 describe 'Controller' do
   include Sinatra::Test
@@ -192,12 +193,10 @@ describe 'Controller' do
   end
 
   describe 'getting /' do
-    before do
-    end
-
     describe 'on fakettp.local' do
       def do_get
         get '/', nil, :host => 'fakettp.local'
+        @response_doc = Hpricot(@response.body)
       end
 
       it 'should return an html response' do
@@ -205,10 +204,16 @@ describe 'Controller' do
         response.content_type.should == 'text/html'
       end
       
-      it 'should render index.erb' do
+      it 'should set the title' do
         do_get
-        # TODO: can't we mock the call to :erb somehow?
-        @response.body.should =~ /<title>FakeTTP<\/title>/
+        (@response_doc/'head/title').inner_html.should == 'FakeTTP'
+      end
+      
+      it 'should render a div for each expectation' do
+        expectation = stub :expectation
+        Fakettp::Expectation.stub!(:all).and_return [expectation, expectation, expectation]
+        do_get
+        @response_doc.search("//div[@class='expectation']").size.should == 3
       end
     end
     

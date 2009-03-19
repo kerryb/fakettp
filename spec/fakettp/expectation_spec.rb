@@ -46,6 +46,16 @@ describe Fakettp::Expectation do
     end
   end
   
+  describe 'getting all expectations' do
+    it 'should return all expectations' do
+      Fakettp::Expectation << 'foo'
+      Fakettp::Expectation << 'bar'
+      expectations = Fakettp::Expectation.all
+      expectations.size.should == 2
+      expectations.should be_all { instance_of?(Fakettp::Expectation) }
+    end
+  end
+  
   describe 'adding an expectation' do
     describe 'when there are existing expectations' do
       before do

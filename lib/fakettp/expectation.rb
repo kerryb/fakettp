@@ -27,6 +27,13 @@ module Fakettp
       end
     end
     
+    def self.all
+      files.map do |f|
+        contents = File.read(File.join(EXPECTATION_DIR, f))
+        Expectation.new contents
+      end
+    end
+    
     def self.next
       file = next_file_to_read
       contents = File.read file

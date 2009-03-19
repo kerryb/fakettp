@@ -1,3 +1,5 @@
+require 'hpricot'
+
 When /^we get (\S*) on (\S*)$/ do |path, host|
   req = Net::HTTP::Get.new path
   @@response = Net::HTTP.new(host).start {|http| http.request(req) }
@@ -23,6 +25,10 @@ Then /^the response body should contain '(.*)'$/ do |value|
   @@response.body.should include(value)
 end
 
-Then /^(\S*) in the response should be '(.*)'$/ do |xpath, value|
-  xml_node_values(@@response.body, xpath).should include(value)
+Then /^(\S*) in the response should be '(.*)'$/ do |locator, value|
+  (Hpricot(@@response.body)/locator).inner_html.should == value
+end
+
+Then /^there should be (\d*) (.*) elements in the response$/ do |count, locator|
+  Hpricot(@@response.body).search(locator).size.should == count.to_i
 end

@@ -34,6 +34,7 @@ end
 
 get '/', :host => 'fakettp.local' do
   content_type 'text/html'
+  @expectations = Fakettp::Expectation.all
   erb :index
 end
 
