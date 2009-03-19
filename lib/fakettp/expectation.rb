@@ -48,7 +48,7 @@ module Fakettp
     end
     
     def self.files
-      Dir.entries(EXPECTATION_DIR) - ['.', '..']
+      (Dir.entries(EXPECTATION_DIR) - ['.', '..']).sort
     end
   
     private_class_method :next_file_to_create, :next_file_to_read, :files

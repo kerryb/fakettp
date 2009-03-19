@@ -57,6 +57,13 @@ describe Fakettp::Expectation do
         Fakettp::Expectation << expectation
         File.read(File.join(@expectation_dir, '3')).should == expectation
       end
+      
+      it 'should not assume that Dir.entries returns filenames in order' do
+        Dir.stub!(:entries).and_return ['.', '2', '..', '1']
+        expectation = "foo\nbar"
+        Fakettp::Expectation << expectation
+        File.read(File.join(@expectation_dir, '3')).should == expectation
+      end
     end
     
     describe 'when there are no existing expectations' do

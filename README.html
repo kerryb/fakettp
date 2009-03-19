@@ -54,6 +54,10 @@
 <p>To have FakeTTP respond to multiple hostnames, create the appropriate hosts entries. If you&#8217;re using name-based virtual hosts in Apache, add a <em>ServerAlias</em> entry to the virtual host config, under the <em>ServerName</em> line, eg:</p>
 <p><code>ServerAlias foo.com bar.com</code></p>
 <h2>Change log</h2>
+<p>0.2.2 (18 Mar 2009)</p>
+<ul>
+	<li>Only accept control requests (reset, expect, verify) on fakettp.local</li>
+</ul>
 <p>0.2.1 (17 Mar 2009)</p>
 <ul>
 	<li>Fixed issue where rspec matchers weren&#8217;t available to expectations</li>
@@ -78,7 +82,6 @@
 <h2>To Do</h2>
 <ul>
 	<li>Add examples</li>
-	<li>Only respond to control requests (reset/expect/verify) on main hostname</li>
 	<li>Make control requests RESTful?</li>
 	<li>Make main hostname configurable?</li>
 	<li>Show label in verification error for expected requests that weren&#8217;t received</li>
