@@ -92,6 +92,10 @@ To have FakeTTP respond to multiple hostnames, create the appropriate hosts entr
 
 h2. Change log
 
+0.2.3 (19 Mar 2009)
+
+* Fixed a bug where expectations were being overwritten on Linux due to Dir.entries not returning results in the expected order
+
 0.2.2 (18 Mar 2009)
 
 * Only accept control requests (reset, expect, verify) on fakettp.local
