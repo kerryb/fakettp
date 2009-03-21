@@ -8,6 +8,10 @@ module Fakettp
       @contents = contents
     end
     
+    def render
+      @contents
+    end
+    
     def execute binding
       eval @contents, binding
       # TODO: Include context of expectation file

@@ -4,8 +4,7 @@
   </head>
   <body>
     <% @expectations.each do |expectation| %>
-      <div class="expectation">
-      </div>
+      <div class="expectation"><%= expectation.render %></div>
     <% end %>
   </body>
 </html>

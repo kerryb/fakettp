@@ -210,10 +210,17 @@ describe 'Controller' do
       end
       
       it 'should render a div for each expectation' do
-        expectation = stub :expectation
+        expectation = stub(:expectation).as_null_object
         Fakettp::Expectation.stub!(:all).and_return [expectation, expectation, expectation]
         do_get
         @response_doc.search("//div[@class='expectation']").size.should == 3
+      end
+      
+      it 'should display the expectation contents' do
+        expectation = stub :expectation, :render => 'foo'
+        Fakettp::Expectation.stub!(:all).and_return [expectation]
+        do_get
+        (@response_doc/"//div[@class='expectation']").inner_html.should == 'foo'
       end
     end
     

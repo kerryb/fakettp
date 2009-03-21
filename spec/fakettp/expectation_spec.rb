@@ -123,6 +123,12 @@ describe Fakettp::Expectation do
     end
   end
   
+  describe 'rendering itself' do
+    it 'should show its contents' do
+      Fakettp::Expectation.new('foo').render.should == 'foo'
+    end
+  end
+  
   describe 'executing' do
     it 'should eval the expectation code in the context of the supplied binding' do
       def getBinding(n)

@@ -26,6 +26,14 @@ Then /^the response body should contain '(.*)'$/ do |value|
 end
 
 Then /^(\S*) in the response should be '(.*)'$/ do |locator, value|
+  check_value locator, value
+end
+
+Then /^(\S*) in the response should be:$/ do |locator, value|
+  check_value locator, value
+end
+
+def check_value locator, value
   (Hpricot(@@response.body)/locator).inner_html.should == value
 end
 
