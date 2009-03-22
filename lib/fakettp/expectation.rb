@@ -4,8 +4,10 @@ module Fakettp
     
     EXPECTATION_DIR = File.join FAKETTP_BASE, 'tmp', 'expectations'
     
-    def initialize contents
-      @contents = contents
+    attr_reader :id
+    
+    def initialize id, contents
+      @id, @contents = id, contents
     end
     
     def render
@@ -34,7 +36,7 @@ module Fakettp
     def self.all
       files.map do |f|
         contents = File.read(File.join(EXPECTATION_DIR, f))
-        Expectation.new contents
+        Expectation.new f, contents
       end
     end
     
@@ -42,7 +44,7 @@ module Fakettp
       file = next_file_to_read
       contents = File.read file
       FileUtils.rm file
-      Expectation.new contents
+      Expectation.new File.basename(file).to_i, contents
     end
     
     private

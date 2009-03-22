@@ -1,10 +1,14 @@
 <html>
   <head>
+    <link rel="stylesheet" type="text/css" href="fakettp.css" />
     <title>FakeTTP</title>
   </head>
   <body>
     <% @expectations.each do |expectation| %>
-      <div class="expectation"><%= expectation.render %></div>
+      <h1><%= expectation.id %></h1>
+      <div class="expectation">
+        <pre><%= expectation.render %></pre>
+      </div>
     <% end %>
   </body>
 </html>

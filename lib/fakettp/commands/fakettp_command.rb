@@ -33,6 +33,8 @@ module Fakettp
         FileUtils.mkdir_p dir + '/public'
         FileUtils.cp File.dirname(__FILE__) + '/../config.ru', dir
         FileUtils.cp File.dirname(__FILE__) + '/../../../README.html', dir
+        FileUtils.cp File.dirname(__FILE__) + '/../public/fakettp.css',
+            dir + '/public'
         return 0
       end
       

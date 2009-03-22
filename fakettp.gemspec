@@ -6,11 +6,11 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Kerry Buckley"]
-  s.date = %q{2009-03-21}
+  s.date = %q{2009-03-22}
   s.default_executable = %q{fakettp}
   s.email = %q{kerryjbuckley@gmail.com}
   s.executables = ["fakettp"]
-  s.files = ["lib/fakettp", "lib/fakettp/commands", "lib/fakettp/commands/fakettp_command.rb", "lib/fakettp/config.ru", "lib/fakettp/controller.rb", "lib/fakettp/error.rb", "lib/fakettp/expectation.rb", "lib/fakettp/expectation_helper.rb", "lib/fakettp/simulator.rb", "lib/fakettp/views", "lib/fakettp/views/index.erb", "lib/fakettp.rb", "bin/fakettp", "README.html"]
+  s.files = ["lib/fakettp", "lib/fakettp/commands", "lib/fakettp/commands/fakettp_command.rb", "lib/fakettp/config.ru", "lib/fakettp/controller.rb", "lib/fakettp/error.rb", "lib/fakettp/expectation.rb", "lib/fakettp/expectation_helper.rb", "lib/fakettp/public", "lib/fakettp/public/fakettp.css", "lib/fakettp/simulator.rb", "lib/fakettp/views", "lib/fakettp/views/index.erb", "lib/fakettp.rb", "bin/fakettp", "README.html"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/kerryb/fakettp/}
   s.require_paths = ["lib"]

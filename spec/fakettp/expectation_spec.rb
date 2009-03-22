@@ -101,7 +101,7 @@ describe Fakettp::Expectation do
   
       it 'should return an expectation with the contents of the first file' do
         expectation = stub :expectation
-        Fakettp::Expectation.stub!(:new).with(@contents).and_return expectation
+        Fakettp::Expectation.stub!(:new).with(2, @contents).and_return expectation
         Fakettp::Expectation.next.should == expectation
       end
     
@@ -123,9 +123,13 @@ describe Fakettp::Expectation do
     end
   end
   
+  it 'should allow access to its ID' do
+    Fakettp::Expectation.new(1, 'foo').id.should == 1
+  end
+  
   describe 'rendering itself' do
     it 'should show its contents' do
-      Fakettp::Expectation.new('foo').render.should == 'foo'
+      Fakettp::Expectation.new(1, 'foo').render.should == 'foo'
     end
   end
   
@@ -134,7 +138,7 @@ describe Fakettp::Expectation do
       def getBinding(n)
         return binding
       end
-      Fakettp::Expectation.new('n + 2').execute(getBinding(2)).should == 4
+      Fakettp::Expectation.new(1, 'n + 2').execute(getBinding(2)).should == 4
     end
   end
 end

@@ -194,6 +194,12 @@ describe 'Controller' do
 
   describe 'getting /' do
     describe 'on fakettp.local' do
+      before do
+        expectation_1 = stub :expectation, :id => 1, :render => 'foo'
+        expectation_2 = stub :expectation, :id => 2, :render => 'bar'
+        Fakettp::Expectation.stub!(:all).and_return [expectation_1, expectation_2]
+      end
+      
       def do_get
         get '/', nil, :host => 'fakettp.local'
         @response_doc = Hpricot(@response.body)
@@ -210,17 +216,18 @@ describe 'Controller' do
       end
       
       it 'should render a div for each expectation' do
-        expectation = stub(:expectation).as_null_object
-        Fakettp::Expectation.stub!(:all).and_return [expectation, expectation, expectation]
         do_get
-        @response_doc.search("//div[@class='expectation']").size.should == 3
+        @response_doc.search("//div[@class='expectation']").size.should == 2
+      end
+      
+      it 'should display the expectation number as a heading' do
+        do_get
+        (@response_doc/"//h1[1]").inner_html.should == '1'
       end
       
       it 'should display the expectation contents' do
-        expectation = stub :expectation, :render => 'foo'
-        Fakettp::Expectation.stub!(:all).and_return [expectation]
         do_get
-        (@response_doc/"//div[@class='expectation']").inner_html.should == 'foo'
+        (@response_doc/"//div[@class='expectation'][1]/pre").inner_html.should == 'foo'
       end
     end
     

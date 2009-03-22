@@ -1,0 +1,33 @@
+body {
+  font: 10pt Corbel, "Lucida Grande", "Lucida Sans Unicode",
+    "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans",
+    "Liberation Sans", Verdana, sans-serif;
+}
+div.expectation {
+  width: 95%;
+  border: 1px solid #888;
+  background-color: #eee;
+  margin: 0 auto 10px auto;
+  padding: 5px;
+}
+h1 {
+  width: 95%;
+  border: 1px solid #888;
+  background-color: #888;
+  margin: 0 auto;
+  padding: 2px 5px;
+  font-size: 110%;
+  color: #fff;
+}
+.expectation pre {
+  padding: 0;
+  margin: 0;
+  font: 75% Monaco, "Bitstream Vera Sans Mono", "Lucida Console",
+    Terminal, monospace;        
+}
+.pass {
+  color: #0a0;
+}
+.fail {
+  color: #f00;
+}
