@@ -9,7 +9,7 @@ module Fakettp
     end
     
     def self.verify
-      Error << 'Expected request not received' unless Expectation.empty?
+      Error << 'Expected request not received' unless Expectation.all_received?
       Error.empty?
     end
     

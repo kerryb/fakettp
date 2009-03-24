@@ -21,3 +21,17 @@ Feature: Dashboard for debugging failures
         request.path_info.should == '/'
       end
       """
+
+  Scenario: Highlight passed and failed lines
+    Given the simulator is reset
+    And we expect pass_and_fail
+    And we get / on foo.fake.local
+    When we get / on fakettp.local
+    Then //div[1]/pre in the response should be:
+      """
+      <span class="pass">expect "pass and fail" do
+        (2 + 2).should == 4</span>
+      <span class="fail">  true.should be_false</span>
+        'will never get here'
+      end
+      """

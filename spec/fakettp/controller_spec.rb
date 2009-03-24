@@ -4,6 +4,10 @@ require 'hpricot'
 describe 'Controller' do
   include Sinatra::Test
   
+  before do
+    Fakettp::Simulator.reset
+  end
+  
   it 'should mix in Fakettp::ExpectationHelper' do
     Sinatra::Application.included_modules.should include(Fakettp::ExpectationHelper)
   end

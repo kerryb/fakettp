@@ -84,7 +84,7 @@ describe Fakettp::Simulator do
     
     describe 'when there are pending expectations' do
       before do
-        Fakettp::Expectation.stub!(:empty?).and_return true
+        Fakettp::Expectation.stub!(:all_received?).and_return true
       end
       
       describe 'when there are no errors' do
@@ -106,7 +106,7 @@ describe Fakettp::Simulator do
     
     describe 'when there are pending expectations' do
       before do
-        Fakettp::Expectation.stub!(:empty?).and_return false
+        Fakettp::Expectation.stub!(:all_received?).and_return false
       end
       
       it 'should add an error' do
