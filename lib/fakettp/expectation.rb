@@ -73,7 +73,7 @@ module Fakettp
     end
     
     def self.files
-      (Dir.entries(EXPECTATION_DIR) - ['.', '..']).sort
+      (Dir.entries(EXPECTATION_DIR) - ['.', '..']).sort_by {|a| a.to_i}
     end
   
     private_class_method :next_file_to_create, :next_file_to_read,
