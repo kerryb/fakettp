@@ -99,6 +99,12 @@ describe Fakettp::Expectation do
         Fakettp::Expectation.next
         File.exist?(File.join(@expectation_dir, '2')).should be_false
       end
+    
+      it 'should order expectations as integers, not strings' do
+        FileUtils.touch File.join(@expectation_dir, '10')
+        Fakettp::Expectation.should_receive(:new).with(@contents)
+        Fakettp::Expectation.next
+      end
     end
 
     describe 'when there are no remaining expectations' do
