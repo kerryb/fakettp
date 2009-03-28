@@ -3,48 +3,31 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Fakettp::Expectation do
   before :all do
     @expectation_dir = File.join FAKETTP_BASE, 'tmp', 'expectations'
-    @next_expectation_file = File.join FAKETTP_BASE, 'tmp', 'next_expectation'
     FileUtils.mkdir_p @expectation_dir
-    FileUtils.rm_rf @next_expectation_file
   end
   
-  def setup_files count = nil
-    FileUtils.rm_rf Dir.glob(File.join(@expectation_dir, '*'))
-    if count
-      (1..count).each do |name|
-        FileUtils.touch File.join(@expectation_dir, name.to_s)
-      end
+  def create_expectations count = 0
+    Fakettp::Expectation.clear_all
+    count.times do
+      Fakettp::Expectation << ''
     end
   end
-  
-  def set_next_expectation number
-    File.open @next_expectation_file, 'w' do |f|
-      f.puts number
-    end
-  end
-  
+    
   describe 'clearing all expectations' do
     before do
-      setup_files 2
+      create_expectations 2
     end
     
-    it 'should remove the contents of tmp/expectations' do
+    it 'should remove all expectations' do
       Fakettp::Expectation.clear_all
-      Dir.glob(File.join(@expectation_dir, '**', '*')).should be_empty
-    end
-    
-    it 'should remove the next_expectation file' do
-      FileUtils.touch @next_expectation_file
-      Fakettp::Expectation.clear_all
-      File.exists?(@next_expectation_file).should be_false
+      Fakettp::Expectation.should be_all_received
     end
   end
   
   describe 'checking whether all expected requests have been received' do
     describe 'when there are no expectations' do
       before do
-        setup_files
-        FileUtils.rm_rf @next_expectation_file
+        create_expectations
       end
       
       it 'should return true' do
@@ -52,10 +35,9 @@ describe Fakettp::Expectation do
       end
     end
 
-    describe 'when the next expectation file points to an expectation' do
+    describe "when there are expectations that haven't been run" do
       before do
-        setup_files 2
-        set_next_expectation 2
+        create_expectations 1
       end
       
       it 'should return false' do
@@ -63,13 +45,13 @@ describe Fakettp::Expectation do
       end
     end
 
-    describe 'when the next expectation file does not point to an expectation' do
+    describe "when all expectations have been run" do
       before do
-        setup_files 2
-        set_next_expectation 3
+        create_expectations 1
+        Fakettp::Expectation.next
       end
       
-      it 'should return false' do
+      it 'should return true' do
         Fakettp::Expectation.should be_all_received
       end
     end
@@ -77,7 +59,7 @@ describe Fakettp::Expectation do
   
   describe 'getting all expectations' do
     it 'should return all expectations' do
-      setup_files 2
+      create_expectations 2
       expectations = Fakettp::Expectation.all
       expectations.size.should == 2
       expectations.should be_all { instance_of?(Fakettp::Expectation) }
@@ -87,32 +69,26 @@ describe Fakettp::Expectation do
   describe 'adding an expectation' do
     describe 'when there are existing expectations' do
       before do
-        setup_files 2
+        create_expectations 1
       end
     
-      it 'should copy the supplied code to the next numbered expectation' do
+      it 'should create a new expectation' do
         expectation = "foo\nbar"
         Fakettp::Expectation << expectation
-        File.read(File.join(@expectation_dir, '3')).should == expectation
-      end
-      
-      it 'should not assume that Dir.entries returns filenames in order' do
-        Dir.stub!(:entries).and_return ['.', '2', '..', '1']
-        expectation = "foo\nbar"
-        Fakettp::Expectation << expectation
-        File.read(File.join(@expectation_dir, '3')).should == expectation
+        Fakettp::Expectation.next
+        Fakettp::Expectation.next.id.should == 2
       end
     end
     
     describe 'when there are no existing expectations' do
       before do
-        setup_files
+        create_expectations
       end
 
       it 'should start at 1' do
         expectation = "foo\nbar"
         Fakettp::Expectation << expectation
-        File.read(File.join(@expectation_dir, '1')).should == expectation
+        Fakettp::Expectation.next.id.should == 1
       end
     end
   end
@@ -120,71 +96,21 @@ describe Fakettp::Expectation do
   describe 'getting the next expectation' do
     describe 'when there are remaining expectations' do
       before do
-        setup_files 2
-        set_next_expectation 2
+        create_expectations
         @contents = "foo\nbar"
-        File.open File.join(@expectation_dir, '2'), 'w' do |f|
-          f.write @contents
-        end
+        Fakettp::Expectation << @contents
       end
   
-      it 'should return an expectation with the contents of the next file' do
+      it 'should return an expectation with the correct contents' do
         expectation = stub :expectation
-        Fakettp::Expectation.stub!(:new).with(2, @contents).and_return expectation
+        Fakettp::Expectation.stub!(:new).with(1, @contents).and_return expectation
         Fakettp::Expectation.next.should == expectation
       end
-      
-      it 'should increment the next expectation file' do
-        Fakettp::Expectation.next
-        File.read(@next_expectation_file).chomp.should == '3'
-      end
     end
 
     describe 'when there are no remaining expectations' do
       before do
-        setup_files 2
-        set_next_expectation 3
-      end
-      
-      it 'should raise an error' do
-        lambda { Fakettp::Expectation.next }.should raise_error(Fakettp::Expectation::Error,
-            'Received unexpected request')
-      end
-    end
-
-    describe 'when there is no next expectation file' do
-      before do
-        FileUtils.rm_rf @next_expectation_file
-      end
-
-      describe 'when expectaton 1 exists' do
-        before do
-          setup_files 1
-        end
-      
-        it 'should return the first expectation' do
-          expectation = stub :expectation
-          Fakettp::Expectation.stub!(:new).with(1, an_instance_of(String)).and_return expectation
-          Fakettp::Expectation.next.should == expectation
-        end
-      end
-
-      describe 'when expectaton 1 does not exist' do
-        before do
-          setup_files
-        end
-      
-        it 'should raise an error' do
-          lambda { Fakettp::Expectation.next }.should raise_error(Fakettp::Expectation::Error,
-              'Received unexpected request')
-        end
-      end
-    end
-
-    describe 'when there are no remaining expectations' do
-      before do
-        setup_files 2
-        set_next_expectation 3
+        Fakettp::Expectation.clear_all
       end
       
       it 'should raise an error' do
@@ -194,10 +120,9 @@ describe Fakettp::Expectation do
     end
     
     it 'should order expectations as integers, not strings' do
-      setup_files 11
-      set_next_expectation 1
+      create_expectations 11
       Fakettp::Expectation.next
-      File.read(@next_expectation_file).chomp.should == '2'
+      Fakettp::Expectation.next.id.should == 2
     end
   end
   
