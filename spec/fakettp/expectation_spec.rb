@@ -1,5 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
+# TODO: factor out persistence
+
 describe Fakettp::Expectation do
   before :all do
     @expectation_dir = File.join FAKETTP_BASE, 'tmp', 'expectations'
@@ -218,5 +220,19 @@ describe Fakettp::Expectation do
       end
       Fakettp::Expectation.new(1, 'n + 2').execute(getBinding(2)).should == 4
     end
+  end
+end
+
+describe Fakettp::Expectation::Error do
+  it 'should record the expectation that caused it' do
+    Fakettp::Expectation::Error.new(1, 2, 'foo').expectation.should == 1
+  end
+  
+  it 'should record the line number that failed' do
+    Fakettp::Expectation::Error.new(1, 2, 'foo').line_no.should == 2
+  end
+  
+  it 'should record a message' do
+    Fakettp::Expectation::Error.new(1, 2, 'foo').message.should == 'foo'
   end
 end

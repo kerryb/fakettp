@@ -60,12 +60,12 @@ describe Fakettp::Simulator do
     
     describe 'when an expectation error occurs' do
       before do
-        @expectation.stub!(:execute).and_raise Fakettp::Expectation::Error.new('foo')
-        Fakettp::Error.stub!(:<<)
+        @expectation.stub!(:execute).and_raise Fakettp::Expectation::Error.new(1, 2, 'foo')
+        Fakettp::Error.stub!(:add)
       end
       
       it 'should record the error' do
-        Fakettp::Error.should_receive(:<<).with 'foo'
+        Fakettp::Error.should_receive(:add).with 1, 2, 'foo'
         begin
           do_handle
         rescue Fakettp::Expectation::Error;end
@@ -110,7 +110,7 @@ describe Fakettp::Simulator do
       end
       
       it 'should add an error' do
-        Fakettp::Error.should_receive(:<<).with 'Expected request not received'
+        Fakettp::Error.should_receive(:add).with 0, 0, 'Expected request not received'
         do_verify
       end
 

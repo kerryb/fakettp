@@ -1,25 +1,28 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
+# TODO: factor out persistence
+
 describe Fakettp::Error do
   before :all do
-    @error_file = File.join FAKETTP_BASE, 'tmp', 'errors'
+    @error_dir = File.join FAKETTP_BASE, 'tmp', 'errors'
+    FileUtils.mkdir_p @error_dir
   end
 
   describe 'clearing all errors' do
     before do
-      FileUtils.touch @error_file
+      FileUtils.touch File.join(@error_dir, '1-1')
     end
     
     it 'should remove the errors file' do
       Fakettp::Error.clear_all
-      File.exists?(@error_file).should be_false
+      Dir.glob(File.join(@error_dir, '*')).should be_empty
     end
   end
   
   describe 'checking emptiness' do
-    describe 'when the errors file exists' do
+    describe 'when errors files exist' do
       before do
-        FileUtils.touch @error_file
+        FileUtils.touch File.join(@error_dir, '1-1')
       end
       
       it 'should return false' do
@@ -27,9 +30,9 @@ describe Fakettp::Error do
       end
     end
 
-    describe 'when the errors file exists' do
+    describe 'when no errors files exist' do
       before do
-        FileUtils.rm_rf @error_file
+        FileUtils.rm_rf Dir.glob(File.join(@error_dir, '*'))
       end
       
       it 'should return false' do
@@ -38,52 +41,42 @@ describe Fakettp::Error do
     end
   end
   
-  describe 'adding an error' do
-    describe 'when the error file already exists' do
-      before do
-        File.open @error_file, 'w' do |f|
-          f.puts 'foo'
-        end
-      end
-      
-      it 'should append the error message to the file' do
-        Fakettp::Error << 'bar'
-        File.read(@error_file).should == "foo\nbar\n"
-      end
-    end
-    
-    describe 'when the error file does not exist' do
-      before do
-        FileUtils.rm_rf @error_file
-      end
-      
-      it 'should create the file and write the error message to it' do
-        Fakettp::Error << 'bar'
-        File.read(@error_file).should == "bar\n"
-      end
+  describe 'adding an error' do      
+    it 'should write the error message to the file' do
+      Fakettp::Error.add 1, 2, 'foo'
+      File.read(File.join(@error_dir, '1-2')).chomp.should == "foo"
     end
   end
   
   describe 'listing errors' do
-    describe 'when the error file already exists' do
+    describe 'when error files exist' do
       before do
-        File.open @error_file, 'w' do |f|
+        FileUtils.rm_rf Dir.glob(File.join(@error_dir, '*'))
+        File.open File.join(@error_dir, '1-2'), 'w' do |f|
           f.puts 'foo'
         end
+        File.open File.join(@error_dir, '2-3'), 'w' do |f|
+          f.puts 'bar'
+        end
+        
+        @error_1 = stub :error_1
+        @error_2 = stub :error_2
+        Fakettp::Error.stub!(:new).with(1, 2, 'foo').and_return @error_1
+        Fakettp::Error.stub!(:new).with(2, 3, 'bar').and_return @error_2
       end
       
-      it 'should return the contents of the error file' do
-        Fakettp::Error.list.should == "foo\n"
+      it 'should return an array containing the saved errors' do
+        Fakettp::Error.list.should == [@error_1, @error_2]
       end
     end
     
     describe 'when the error file does not exist' do
       before do
-        FileUtils.rm_rf @error_file
+        FileUtils.rm_rf Dir.glob(File.join(@error_dir, '*'))
       end
       
-      it 'should return an empty string' do
-        Fakettp::Error.list.should == ''
+      it 'should return an empty array' do
+        Fakettp::Error.list.should == []
       end
     end
   end

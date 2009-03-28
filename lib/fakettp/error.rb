@@ -1,23 +1,35 @@
 module Fakettp
   class Error
-    ERROR_FILE = File.join FAKETTP_BASE, 'tmp', 'errors'
+    ERROR_DIR = File.join FAKETTP_BASE, 'tmp', 'errors'
     
-    def self.clear_all
-      FileUtils.rm_rf ERROR_FILE
+    def initialize expectation, line_no, message
+      @expectation = expectation
+      @line_no = line_no
+      @message = message
     end
     
-    def self.<< message
-      File.open ERROR_FILE, 'a' do |f|
+    def self.clear_all
+      FileUtils.rm_rf Dir.glob(File.join(ERROR_DIR, '*'))
+    end
+    
+    def self.add expectation, line_no, message
+      File.open File.join(ERROR_DIR, "#{expectation}-#{line_no}"), 'w' do |f|
         f.puts message
       end
     end
     
     def self.empty?
-      !File.exists? ERROR_FILE
+      Dir.glob(File.join(ERROR_DIR, '*')).empty?
     end
     
     def self.list
-      empty? ? '' : File.read(ERROR_FILE)
+      return [] if empty?
+      Dir.glob(File.join(ERROR_DIR, '*')).map do |file|
+        expectation = File.basename(file).sub(/-.*/, '').to_i
+        line_no = File.basename(file).sub(/.*-/, '').to_i
+        message = File.read(file).chomp
+        Error.new expectation, line_no, message
+      end
     end
   end
 end

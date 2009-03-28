@@ -1,6 +1,14 @@
 module Fakettp
   class Expectation
-    class Error < Exception; end
+    class Error < Exception
+      attr_reader :expectation, :line_no
+      
+      def initialize expectation, line_no, message
+        @expectation = expectation
+        @line_no = line_no
+        super message
+      end
+    end
     
     EXPECTATION_DIR = File.join FAKETTP_BASE, 'tmp', 'expectations'
     NEXT_EXPECTATION_FILE = File.join FAKETTP_BASE, 'tmp', 'next_expectation'

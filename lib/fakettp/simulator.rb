@@ -9,7 +9,7 @@ module Fakettp
     end
     
     def self.verify
-      Error << 'Expected request not received' unless Expectation.all_received?
+      Error.add 0, 0, 'Expected request not received' unless Expectation.all_received?
       Error.empty?
     end
     
@@ -21,7 +21,7 @@ module Fakettp
       begin
         Expectation.next.execute binding
       rescue Fakettp::Expectation::Error => e
-        Error << e.message
+        Error.add e.expectation, e.line_no, e.message
         raise e
       end
     end
