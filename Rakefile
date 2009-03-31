@@ -48,9 +48,10 @@ desc 'run specs, create gem, install and test'
 task :default => [:verify_rcov, :create_readme, :test_install, :features]
 
 task :spec_setup do
-  FAKETTP_BASE = 'testinstall'
-  FileUtils.mkdir_p 'testinstall/tmp/expectations'
-  FileUtils.cp 'lib/fakettp/fakettp.yml', 'testinstall'
+  FAKETTP_BASE = 'tmp/install'
+  FileUtils.rm_rf FAKETTP_BASE
+  FileUtils.mkdir_p FAKETTP_BASE + '/tmp'
+  FileUtils.cp 'lib/fakettp/fakettp.yml', FAKETTP_BASE
   load 'lib/fakettp/schema.rb'
 end
 
@@ -114,5 +115,5 @@ end
 
 desc 'run integration tests'
 task :features do
-  system 'cucumber'
+  system 'cucumber features'
 end

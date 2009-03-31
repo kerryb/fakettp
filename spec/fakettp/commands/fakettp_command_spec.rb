@@ -42,13 +42,13 @@ describe Fakettp::Commands::FakettpCommand do
     
     describe 'and a directory' do
       before do
-        @dir = File.dirname(__FILE__) + '/foo'
+        @dir = File.expand_path(File.dirname(__FILE__) + '../../../tmp/install_test')
         FileUtils.rm_rf @dir
         @command = Fakettp::Commands::FakettpCommand.new(['install', @dir])
       end
       
       after do
-        # FileUtils.rm_rf @dir
+        FileUtils.rm_rf @dir
       end
       
       describe 'when the directory already exists' do
