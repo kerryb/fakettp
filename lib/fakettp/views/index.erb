@@ -4,8 +4,8 @@
     <title>FakeTTP</title>
   </head>
   <body>
-    <% @expectations.each do |expectation| %>
-      <h1><%= expectation.id %></h1>
+    <% @expectations.each_with_index do |expectation, index| %>
+      <h1><%= index + 1 %></h1>
       <div class="expectation">
         <pre><%= expectation.render %></pre>
       </div>

@@ -224,14 +224,16 @@ describe 'Controller' do
         @response_doc.search("//div[@class='expectation']").size.should == 2
       end
       
-      it 'should display the expectation number as a heading' do
+      it 'should number the expectations' do
         do_get
         (@response_doc/"//h1[1]").inner_html.should == '1'
+        (@response_doc/"//h1[2]").inner_html.should == '2'
       end
       
       it 'should display the expectation contents' do
         do_get
         (@response_doc/"//div[@class='expectation'][1]/pre").inner_html.should == 'foo'
+        (@response_doc/"//div[@class='expectation'][2]/pre").inner_html.should == 'bar'
       end
     end
     

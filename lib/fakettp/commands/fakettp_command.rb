@@ -29,12 +29,15 @@ module Fakettp
           $stderr.puts "File or directory #{dir} already exists."
           return 1
         end
-        FileUtils.mkdir_p dir + '/tmp/expectations', :mode => 0777
+        FileUtils.mkdir_p dir + '/tmp', :mode => 0777
         FileUtils.mkdir_p dir + '/public'
         FileUtils.cp File.dirname(__FILE__) + '/../config.ru', dir
+        FileUtils.cp File.dirname(__FILE__) + '/../fakettp.yml', dir
         FileUtils.cp File.dirname(__FILE__) + '/../../../README.html', dir
         FileUtils.cp File.dirname(__FILE__) + '/../public/fakettp.css',
             dir + '/public'
+
+        system %(ruby -e "FAKETTP_BASE = '#{dir}';load '#{File.dirname(__FILE__)}/../schema.rb'")
         return 0
       end
       

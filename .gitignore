@@ -1,5 +1,6 @@
 tmp/**
 pkg
 install
+testinstall
 coverage
 tmtags

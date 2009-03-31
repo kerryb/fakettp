@@ -7,5 +7,5 @@ require 'sinatra/test'
 
 set :environment, :test
 
-FAKETTP_BASE = File.join(File.dirname(__FILE__), '..', 'tmp')
+FAKETTP_BASE = File.join(File.dirname(__FILE__), '..', 'testinstall')
 require File.join(File.dirname(__FILE__), '..', 'lib', 'fakettp')

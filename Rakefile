@@ -24,6 +24,7 @@ spec = Gem::Specification.new do |s|
   s.summary = SUMMARY
   s.has_rdoc = true
   s.add_dependency('sinatra', '>=0.9.1')
+  s.add_dependency('activerecord', '>=2.3')
   s.add_development_dependency('rspec', '>=1.2')
   s.add_development_dependency('spicycode-rcov', '>=0.8.0')
   s.add_development_dependency('cucumber', '>=0.2.0')
@@ -46,8 +47,15 @@ end
 desc 'run specs, create gem, install and test'
 task :default => [:verify_rcov, :create_readme, :test_install, :features]
 
+task :spec_setup do
+  FAKETTP_BASE = 'testinstall'
+  FileUtils.mkdir_p 'testinstall/tmp/expectations'
+  FileUtils.cp 'lib/fakettp/fakettp.yml', 'testinstall'
+  load 'lib/fakettp/schema.rb'
+end
+
 desc 'Run specs'
-Spec::Rake::SpecTask.new(:spec => :create_readme) do |t|
+Spec::Rake::SpecTask.new :spec => :spec_setup do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
   t.spec_opts = %w(-fs --color)
   t.rcov = true
@@ -70,6 +78,8 @@ end
 Rake::GemPackageTask.new(spec) do |pkg|
   pkg.gem_spec = spec
 end
+
+task :package => [:make_spec, :create_readme]
 
 desc "Create a gemspec file"
 task :make_spec do

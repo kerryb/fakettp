@@ -12,7 +12,7 @@ describe Fakettp::Simulator do
     end
     
     it 'should clear expectations' do
-      Fakettp::Expectation.should_receive :clear_all
+      Fakettp::Expectation.should_receive :delete_all
       do_reset
     end
     
@@ -32,7 +32,7 @@ describe Fakettp::Simulator do
     end
     
     it 'should create a new expectation' do
-      Fakettp::Expectation.should_receive(:<<).with @expectation
+      Fakettp::Expectation.should_receive(:create!).with :contents => @expectation
       do_add
     end
   end

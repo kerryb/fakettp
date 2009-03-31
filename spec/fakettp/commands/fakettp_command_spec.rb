@@ -43,11 +43,12 @@ describe Fakettp::Commands::FakettpCommand do
     describe 'and a directory' do
       before do
         @dir = File.dirname(__FILE__) + '/foo'
+        FileUtils.rm_rf @dir
         @command = Fakettp::Commands::FakettpCommand.new(['install', @dir])
       end
       
       after do
-        FileUtils.rm_rf @dir
+        # FileUtils.rm_rf @dir
       end
       
       describe 'when the directory already exists' do
@@ -65,7 +66,7 @@ describe Fakettp::Commands::FakettpCommand do
         end
       end
       
-      describe 'when the directory does not exist' do
+      describe 'when the directory does not exist' do        
         it 'should create the directory' do
           @command.run
           File.should be_a_directory(@dir)
@@ -73,17 +74,20 @@ describe Fakettp::Commands::FakettpCommand do
         
         it 'should copy the correct files to the directory' do
           @command.run
-          Dir.glob(@dir + '/**/*').sort.should == [@dir + '/config.ru',
-              @dir + '/README.html', @dir + '/public',
-              @dir + '/public/fakettp.css', @dir + '/tmp',
-              @dir + '/tmp/expectations'].sort
+          Dir.glob(@dir + '/**/*').reject {|f| f =~ /sqlite3$/}.sort.should ==
+              ['config.ru', 'fakettp.yml', 'README.html', 'public',
+              'public/fakettp.css', 'tmp'].sort.map {|f| "#{@dir}/#{f}"}
         end
         
-        ['tmp', 'tmp/expectations'].each do |dir|
-          it "should make the #{dir} directory world-read/writeable" do
-            @command.run
-            (File.stat(@dir + "/#{dir}").mode & 0777).should == 0777
-          end
+        it "should make the tmp directory world-read/writeable" do
+          @command.run
+          (File.stat(@dir + "/tmp").mode & 0777).should == 0777
+        end
+        
+        it 'should create the database' do
+          @command.run
+          run_from = File.dirname(__FILE__) + '/../../../lib'
+          `cd #{run_from};ruby -e "FAKETTP_BASE = '#{File.expand_path(@dir)}';require 'fakettp/expectation';print Fakettp::Expectation.create.executed"`.should == 'false'
         end
     
         it 'should complete with zero status' do

@@ -4,7 +4,7 @@ require 'fakettp/error'
 module Fakettp
   class Simulator    
     def self.reset
-      Expectation.clear_all
+      Expectation.delete_all
       Error.clear_all
     end
     
@@ -14,7 +14,7 @@ module Fakettp
     end
     
     def self.<< expectation
-      Expectation << expectation
+      Expectation.create! :contents => expectation
     end
     
     def self.handle_request binding
