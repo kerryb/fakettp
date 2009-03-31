@@ -4,7 +4,7 @@ Given /^the simulator is reset$/ do
 end
 
 Given /^we expect (\S*)$/ do |filename|
-  body = File.read(File.dirname(__FILE__) + "/../expectations/#{filename}.rb")
+  body = File.read(File.dirname(__FILE__) + "/../expectations/#{filename}")
   req = Net::HTTP::Post.new '/expect', {'Content-Type' => 'text/plain'}
   req.body = body
   Net::HTTP.new('fakettp.local').start {|http| http.request(req) }
