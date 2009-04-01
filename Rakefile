@@ -26,6 +26,7 @@ spec = Gem::Specification.new do |s|
   s.add_dependency('sinatra', '>=0.9.1')
   s.add_dependency('activerecord', '>=2.3')
   s.add_development_dependency('rspec', '>=1.2')
+  s.add_development_dependency('thoughtbot-shoulda', '>=2.10.1')
   s.add_development_dependency('spicycode-rcov', '>=0.8.0')
   s.add_development_dependency('cucumber', '>=0.2.0')
   s.add_development_dependency('RedCloth', '>=4.1.1')

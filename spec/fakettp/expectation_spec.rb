@@ -9,16 +9,10 @@ describe Fakettp::Expectation do
     Fakettp::Expectation.new.should be_a_kind_of(ActiveRecord::Base)
   end
   
-  it 'should store its contents' do
-    Fakettp::Expectation.columns.detect {|c| c.type == :text && c.name == 'contents'}.
-        should_not be_nil
-  end
-  
-  it 'should track whether it has been executed' do
-    Fakettp::Expectation.columns.detect {|c| c.type == :boolean && c.name == 'executed'}.
-        should_not be_nil
-  end
-  
+  it { should have_db_column(:contents).of_type(:text) }
+
+  it { should have_db_column(:executed).of_type(:boolean) }
+    
   it 'should start out unexecuted' do
     Fakettp::Expectation.create.executed.should be_false
   end

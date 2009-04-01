@@ -4,6 +4,8 @@ require 'spec'
 require 'sinatra'
 require 'spec/interop/test'
 require 'sinatra/test'
+require 'active_record'
+require 'shoulda/active_record'
 
 set :environment, :test
 

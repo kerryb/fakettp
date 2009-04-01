@@ -9,10 +9,7 @@ describe Fakettp::Error do
     Fakettp::Error.new.should be_a_kind_of(ActiveRecord::Base)
   end
   
-  it 'should store a message' do
-    Fakettp::Error.columns.detect {|c| c.type == :text && c.name == 'message'}.
-        should_not be_nil
-  end
+  it { should have_db_column(:message).of_type(:text) }
   
   describe 'listing errors' do
     describe 'when errors exist' do
