@@ -10,7 +10,8 @@ describe Fakettp::Error do
   end
   
   it 'should store a message' do
-    Fakettp::Error.create(:message => 'foo').message.should == 'foo'
+    Fakettp::Error.columns.detect {|c| c.type == :text && c.name == 'message'}.
+        should_not be_nil
   end
   
   describe 'listing errors' do

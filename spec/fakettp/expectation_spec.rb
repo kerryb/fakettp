@@ -10,11 +10,13 @@ describe Fakettp::Expectation do
   end
   
   it 'should store its contents' do
-    Fakettp::Expectation.create(:contents => 'foo').contents.should == 'foo'
+    Fakettp::Expectation.columns.detect {|c| c.type == :text && c.name == 'contents'}.
+        should_not be_nil
   end
   
   it 'should track whether it has been executed' do
-    Fakettp::Expectation.create(:executed => true).executed.should == true
+    Fakettp::Expectation.columns.detect {|c| c.type == :boolean && c.name == 'executed'}.
+        should_not be_nil
   end
   
   it 'should start out unexecuted' do
