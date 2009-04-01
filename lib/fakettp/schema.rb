@@ -5,4 +5,8 @@ ActiveRecord::Schema.define do
     t.text :contents
     t.boolean :executed, :default => false
   end
+
+  create_table :errors, :force => true do |t|
+    t.text :message
+  end
 end

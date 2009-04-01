@@ -1,83 +1,33 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Fakettp::Error do
-  before :all do
-    @error_file = File.join FAKETTP_BASE, 'tmp', 'errors'
-    FileUtils.mkdir_p File.join(FAKETTP_BASE, 'tmp')
-  end
-
-  describe 'clearing all errors' do
-    before do
-      Fakettp::Error << 'foo'
-    end
-    
-    it 'should remove the errors file' do
-      Fakettp::Error.clear_all
-      Fakettp::Error.should be_empty
-    end
+  before do
+    Fakettp::Error.delete_all
   end
   
-  describe 'checking emptiness' do
-    describe 'when errors exist' do
-      before do
-        Fakettp::Error << 'foo'
-      end
-      
-      it 'should return false' do
-        Fakettp::Error.should_not be_empty
-      end
-    end
-
-    describe 'when errors do not exist' do
-      before do
-        Fakettp::Error.clear_all
-      end
-      
-      it 'should return false' do
-        Fakettp::Error.should be_empty
-      end
-    end
+  it 'should be an ActiveRecord' do
+    Fakettp::Error.new.should be_a_kind_of(ActiveRecord::Base)
   end
   
-  describe 'adding an error' do
-    describe 'when errors already exist' do
-      before do
-        Fakettp::Error << 'foo'
-      end
-      
-      it 'should append the new error message' do
-        Fakettp::Error << 'bar'
-        Fakettp::Error.list.should == "foo\nbar\n"
-      end
-    end
-    
-    describe 'when no errors already exist' do
-      before do
-        Fakettp::Error.clear_all
-      end
-      
-      it 'should record the error message' do
-        Fakettp::Error << 'bar'
-        Fakettp::Error.list.should == "bar\n"
-      end
-    end
+  it 'should store a message' do
+    Fakettp::Error.create(:message => 'foo').message.should == 'foo'
   end
   
   describe 'listing errors' do
     describe 'when errors exist' do
       before do
-        Fakettp::Error.clear_all
-        Fakettp::Error << 'foo'
+        Fakettp::Error.create! :message => 'foo'
+        Fakettp::Error.create! :message => 'bar'
       end
       
-      it 'should return the error' do
-        Fakettp::Error.list.should == "foo\n"
+      it 'should return the concatenated error messages' do
+        Fakettp::Error.list.should == "foo\nbar\n"
       end
     end
     
     describe 'when no errors exist' do
       before do
-        Fakettp::Error.clear_all
+        Fakettp::Error.delete_all
       end
       
       it 'should return an empty string' do

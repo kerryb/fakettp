@@ -1,24 +1,58 @@
 <h1>FakeTTP</h1>
-<h2>Purpose</h2>
-<p>When you are writing acceptance/integration tests for an application which makes <span class="caps">HTTP</span> requests to a remote application, sometimes you need to be able to test the interactions in different scenarios without talking to a real instance of the remote application.</p>
-<p>FakeTTP is a standalone web application that allows you to mock requests (ie set and verify expectations on the requests your application makes, and return suitable responses to those requests).</p>
-<h2>Installation</h2>
-<h3>Install the gem</h3>
-<p>Add GitHub as a gem source (you only need to do this once):</p>
-<p><code>gem sources -a http://gems.github.com</code></p>
-<p>Then install FakeTTP:</p>
-<p><code>sudo gem install kerryb-fakettp</code></p>
-<p>Alternatively, you can specify the source when you install the gem:</p>
-<p><code>sudo gem install kerryb-fakettp --source http://gems.github.com</code></p>
-<h3>Create a FakeTTP directory</h3>
-<p>You can install FakeTTP anywhere that your web server user can see it:</p>
-<p><code>fakettp install &lt;directory&gt;</code></p>
-<h3>Point your web server at the directory</h3>
-<p>FakeTTP should work with any Rack-compatible server: just point the server to the correct directory. For example, using <a href="http://www.modrails.com/">Passenger</a> (mod_rails) with Apache, create a virtual host along these lines:</p>
+
+
+	<h2>Purpose</h2>
+
+
+	<p>When you are writing acceptance/integration tests for an application which makes <span class="caps">HTTP</span> requests to a remote application, sometimes you need to be able to test the interactions in different scenarios without talking to a real instance of the remote application.</p>
+
+
+	<p>FakeTTP is a standalone web application that allows you to mock requests (ie set and verify expectations on the requests your application makes, and return suitable responses to those requests).</p>
+
+
+	<h2>Installation</h2>
+
+
+	<h3>Install the gem</h3>
+
+
+	<p>Add GitHub as a gem source (you only need to do this once):</p>
+
+
+	<p><code>gem sources -a http://gems.github.com</code></p>
+
+
+	<p>Then install FakeTTP:</p>
+
+
+	<p><code>sudo gem install kerryb-fakettp</code></p>
+
+
+	<p>Alternatively, you can specify the source when you install the gem:</p>
+
+
+	<p><code>sudo gem install kerryb-fakettp --source http://gems.github.com</code></p>
+
+
+	<h3>Create a FakeTTP directory</h3>
+
+
+	<p>You can install FakeTTP anywhere that your web server user can see it:</p>
+
+
+	<p><code>fakettp install &lt;directory&gt;</code></p>
+
+
+	<h3>Point your web server at the directory</h3>
+
+
+	<p>FakeTTP should work with any Rack-compatible server: just point the server to the correct directory. For example, using <a href="http://www.modrails.com/">Passenger</a> (mod_rails) with Apache, create a virtual host along these lines:</p>
+
+
 <pre><code>
   &lt;VirtualHost *:80&gt;
     ServerName fakettp.local
-    DocumentRoot "/path/to/fakettp/public"
+    DocumentRoot "/path/to/fakettp/public" 
     &lt;directory "/path/to/fakettp/public"&gt;
       Order deny,allow
       Deny from all
@@ -26,78 +60,154 @@
     &lt;/directory&gt;
   &lt;/VirtualHost&gt;
 </code></pre>
-<p>Then make sure <code>fakettp.local</code> resolves to 127.0.0.1 (assuming you&#8217;re running the simulator on the same machine as the application under test), eg by adding the following line to <code>/etc/hosts</code>:</p>
-<p><code>127.0.0.1	fakettp.local</code></p>
-<h3><span class="caps">IMPORTANT</span>: security note</h3>
-<p>Because expectations are set by posting Ruby code to be executed on the server, you probably don&#8217;t want any old Tom, Dick or Harry to be able to connect. The security settings in the virtual host config example above restrict access to clients running on the local machine.</p>
-<h2>Usage</h2>
-<h3>Resetting</h3>
-<p>To reset FakeTTP (ie remove all expectations and errors), make an <span class="caps">HTTP</span> <span class="caps">POST</span> request to <code>http://fakettp.local/reset</code>.</p>
-<h3>Setting expectations</h3>
-<p>To create a new expectation, make an <span class="caps">HTTP</span> <span class="caps">POST</span> request to <code>http://fakettp.local/expect</code>, with a <em>Content-Type</em> header of &#8216;text/plain&#8217; and the request data containing a Ruby block to execute.</p>
-<p>The supplied code should be in the following format, and will generally consist of a number of assertions on the request, followed by creation of the response to return to the application under test.</p>
+
+	<p>Then make sure <code>fakettp.local</code> resolves to 127.0.0.1 (assuming you&#8217;re running the simulator on the same machine as the application under test), eg by adding the following line to <code>/etc/hosts</code>:</p>
+
+
+	<p><code>127.0.0.1    fakettp.local</code></p>
+
+
+	<h3><span class="caps">IMPORTANT</span>: security note</h3>
+
+
+	<p>Because expectations are set by posting Ruby code to be executed on the server, you probably don&#8217;t want any old Tom, Dick or Harry to be able to connect. The security settings in the virtual host config example above restrict access to clients running on the local machine.</p>
+
+
+	<h2>Usage</h2>
+
+
+	<h3>Resetting</h3>
+
+
+	<p>To reset FakeTTP (ie remove all expectations and errors), make an <span class="caps">HTTP POST</span> request to <code>http://fakettp.local/reset</code>.</p>
+
+
+	<h3>Setting expectations</h3>
+
+
+	<p>To create a new expectation, make an <span class="caps">HTTP POST</span> request to <code>http://fakettp.local/expect</code>, with a <em>Content-Type</em> header of &#8216;text/plain&#8217; and the request data containing a Ruby block to execute.</p>
+
+
+	<p>The supplied code should be in the following format, and will generally consist of a number of assertions on the request, followed by creation of the response to return to the application under test.</p>
+
+
 <pre><code>
   expect "GET of /foo" do
     request.host.should == 'fakettp.local'
     request.path_info.should == '/foo'
-  
+
     content_type 'text/plain'
-    "All is well\n"
+    "All is well\n" 
   end
 </code></pre>
-<p>The label on the first line is used in error reporting.</p>
-<p>The expectation code has access to the underlying Sinatra request and response objects etc, as well as <a href="http://rspec.info">RSpec</a> matchers.</p>
-<h3>Verifying</h3>
-<p>To verify that all expectations have been met, make an <span class="caps">HTTP</span> <span class="caps">GET</span> request to <code>http://fakettp.local/verify</code>.</p>
-<p>If all is well, the response will be a <em>200 OK</em> with a body of &#8216;OK&#8217;. Otherwise the status will be <em>400 Bad Request</em>, with a list of failures in the body. The failure messages include the complete details of the unexpected request that was received, to assist debugging.</p>
-<h3>Multiple hosts</h3>
-<p>To have FakeTTP respond to multiple hostnames, create the appropriate hosts entries. If you&#8217;re using name-based virtual hosts in Apache, add a <em>ServerAlias</em> entry to the virtual host config, under the <em>ServerName</em> line, eg:</p>
-<p><code>ServerAlias foo.com bar.com</code></p>
-<h2>Change log</h2>
-<p>0.2.4 (25 Mar 2009)</p>
-<ul>
+
+	<p>The label on the first line is used in error reporting.</p>
+
+
+	<p>The expectation code has access to the underlying Sinatra request and response objects etc, as well as <a href="http://rspec.info">RSpec</a> matchers.</p>
+
+
+	<h3>Verifying</h3>
+
+
+	<p>To verify that all expectations have been met, make an <span class="caps">HTTP GET</span> request to <code>http://fakettp.local/verify</code>.</p>
+
+
+	<p>If all is well, the response will be a <em>200 OK</em> with a body of &#8216;OK&#8217;. Otherwise the status will be <em>400 Bad Request</em>, with a list of failures in the body. The failure messages include the complete details of the unexpected request that was received, to assist debugging.</p>
+
+
+	<h3>Multiple hosts</h3>
+
+
+	<p>To have FakeTTP respond to multiple hostnames, create the appropriate hosts entries. If you&#8217;re using name-based virtual hosts in Apache, add a <em>ServerAlias</em> entry to the virtual host config, under the <em>ServerName</em> line, eg:</p>
+
+
+	<p><code>ServerAlias foo.com bar.com</code></p>
+
+
+	<h2>Change log</h2>
+
+
+	<p>0.2.4 (25 Mar 2009)</p>
+
+
+	<ul>
 	<li>Fixed a bug which caused expectations to be run in the wrong order if there were more than nine of them.</li>
-</ul>
-<p>0.2.3 (19 Mar 2009)</p>
-<ul>
+	</ul>
+
+
+	<p>0.2.3 (19 Mar 2009)</p>
+
+
+	<ul>
 	<li>Fixed a bug where expectations were being overwritten on Linux due to Dir.entries not returning results in the expected order</li>
-</ul>
-<p>0.2.2 (18 Mar 2009)</p>
-<ul>
+	</ul>
+
+
+	<p>0.2.2 (18 Mar 2009)</p>
+
+
+	<ul>
 	<li>Only accept control requests (reset, expect, verify) on fakettp.local</li>
-</ul>
-<p>0.2.1 (17 Mar 2009)</p>
-<ul>
+	</ul>
+
+
+	<p>0.2.1 (17 Mar 2009)</p>
+
+
+	<ul>
 	<li>Fixed issue where rspec matchers weren&#8217;t available to expectations</li>
-</ul>
-<p>0.2 (14 Mar 2009)</p>
-<ul>
+	</ul>
+
+
+	<p>0.2 (14 Mar 2009)</p>
+
+
+	<ul>
 	<li>Complete rewrite, with tests and classes and stuff this time.</li>
-</ul>
-<p>If you get an &#8216;unexpected return&#8217; error, remove the return statement from your expectation, and just put the return value on the last line of the <em>expect</em> block.</p>
-<p>0.1.2 (13 Feb 2009)</p>
-<ul>
+	</ul>
+
+
+	<p>If you get an &#8216;unexpected return&#8217; error, remove the return statement from your expectation, and just put the return value on the last line of the <em>expect</em> block.</p>
+
+
+	<p>0.1.2 (13 Feb 2009)</p>
+
+
+	<ul>
 	<li>Make sure <span class="caps">README</span>.html appears in generated gem</li>
-</ul>
-<p>0.1.1 (13 Feb 2009)</p>
-<ul>
+	</ul>
+
+
+	<p>0.1.1 (13 Feb 2009)</p>
+
+
+	<ul>
 	<li>Fix permissions on installed tmp directory.</li>
-</ul>
-<p>0.1.0 (13 Feb 2009)</p>
-<ul>
+	</ul>
+
+
+	<p>0.1.0 (13 Feb 2009)</p>
+
+
+	<ul>
 	<li>First release as a gem.</li>
-</ul>
-<h2>To Do</h2>
-<ul>
+	</ul>
+
+
+	<h2>To Do</h2>
+
+
+	<ul>
 	<li>Add examples</li>
-	<li>Make control requests RESTful?</li>
-	<li>Make main hostname configurable?</li>
-	<li>Show label in verification error for expected requests that weren&#8217;t received</li>
-	<li>Add facility to stub as well as mock requests</li>
-	<li>Allow more flexibility in request ordering</li>
-	<li>Allow user-specific helper files in installation dir</li>
-	<li>Check install/run behaviour when development dependencies are not installed</li>
-	<li>Provide Ruby <span class="caps">API</span> to set expectations etc</li>
-	<li>Return the expected content type even if expectation fails</li>
-	<li>Add html view to aid debugging</li>
-</ul>
+		<li>Make control requests RESTful?</li>
+		<li>Make main hostname configurable?</li>
+		<li>Show label in verification error for expected requests that weren&#8217;t received</li>
+		<li>Add facility to stub as well as mock requests</li>
+		<li>Allow more flexibility in request ordering</li>
+		<li>Allow user-specific helper files in installation dir</li>
+		<li>Check install/run behaviour when development dependencies are not installed</li>
+		<li>Provide Ruby <span class="caps">API</span> to set expectations etc</li>
+		<li>Return the expected content type even if expectation fails</li>
+		<li>Add html view to aid debugging</li>
+	</ul>

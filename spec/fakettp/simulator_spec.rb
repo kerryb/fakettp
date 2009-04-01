@@ -2,8 +2,8 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Fakettp::Simulator do
   before do
-    Fakettp::Expectation.stub! :clear_all
-    Fakettp::Error.stub! :clear_all
+    Fakettp::Expectation.stub! :delete_all
+    Fakettp::Error.stub! :delete_all
   end
   
   describe "resetting" do
@@ -17,7 +17,7 @@ describe Fakettp::Simulator do
     end
     
     it 'should clear errors' do
-      Fakettp::Error.should_receive :clear_all
+      Fakettp::Error.should_receive :delete_all
       do_reset
     end
   end
@@ -61,11 +61,11 @@ describe Fakettp::Simulator do
     describe 'when an expectation error occurs' do
       before do
         @expectation.stub!(:execute).and_raise Fakettp::Expectation::Error.new('foo')
-        Fakettp::Error.stub!(:<<)
+        Fakettp::Error.stub!(:create!)
       end
       
       it 'should record the error' do
-        Fakettp::Error.should_receive(:<<).with 'foo'
+        Fakettp::Error.should_receive(:create!).with(:message => 'foo')
         begin
           do_handle
         rescue Fakettp::Expectation::Error;end
@@ -89,7 +89,7 @@ describe Fakettp::Simulator do
       
       describe 'when there are no errors' do
         before do
-          Fakettp::Error.stub!(:empty?).and_return true
+          Fakettp::Error.stub!(:exists?).with(no_args).and_return false
         end
       
         it { do_verify.should be_true }
@@ -97,7 +97,7 @@ describe Fakettp::Simulator do
     
       describe 'when there are errors' do
         before do
-          Fakettp::Error.stub!(:empty?).and_return false
+          Fakettp::Error.stub!(:exists?).with(no_args).and_return true
         end
       
         it { do_verify.should be_false }
@@ -110,7 +110,7 @@ describe Fakettp::Simulator do
       end
       
       it 'should add an error' do
-        Fakettp::Error.should_receive(:<<).with 'Expected request not received'
+        Fakettp::Error.should_receive(:create!).with(:message => 'Expected request not received')
         do_verify
       end
 
