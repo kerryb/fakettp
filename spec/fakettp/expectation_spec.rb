@@ -71,9 +71,8 @@ describe Fakettp::Expectation do
         Fakettp::Expectation.delete_all
       end
       
-      it 'should raise an error' do
-        lambda { Fakettp::Expectation.next }.should raise_error(Fakettp::Expectation::Error,
-            'Received unexpected request')
+      it 'should return nil' do
+        Fakettp::Expectation.next.should be_nil
       end
     end
   end

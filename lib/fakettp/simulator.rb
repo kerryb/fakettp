@@ -18,11 +18,17 @@ module Fakettp
     end
     
     def self.handle_request binding
-      begin
-        Expectation.next.execute binding
-      rescue Fakettp::Expectation::Error => e
-        Error.create! :message => e.message
-        raise e
+      expectation = Expectation.next
+      if expectation
+        begin
+          expectation.execute binding
+        rescue Fakettp::Expectation::Error => e
+          expectation.errors.create :message => e.message
+          raise e
+        end
+      else
+        Error.create! :message => 'Received unexpected request'
+        raise Expectation::Error.new('Received unexpected request')
       end
     end
     

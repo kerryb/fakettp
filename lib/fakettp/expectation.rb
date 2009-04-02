@@ -23,9 +23,7 @@ module Fakettp
     end
     
     def self.next
-      next_expectation = find_by_executed(false)
-      raise Error.new('Received unexpected request') unless next_expectation
-      next_expectation
+      find_by_executed(false)
     end
   end
 end

@@ -58,14 +58,32 @@ describe Fakettp::Simulator do
       do_handle.should == @result
     end
     
-    describe 'when an expectation error occurs' do
+    describe 'when there are no expectations left' do
       before do
-        @expectation.stub!(:execute).and_raise Fakettp::Expectation::Error.new('foo')
-        Fakettp::Error.stub!(:create!)
+        Fakettp::Expectation.stub!(:next).and_return nil
       end
       
-      it 'should record the error' do
-        Fakettp::Error.should_receive(:create!).with(:message => 'foo')
+      it 'should add an error' do
+        Fakettp::Error.should_receive(:create!).with(:message => 'Received unexpected request')
+        begin
+          do_handle
+        rescue Fakettp::Expectation::Error;end
+      end
+      
+      it 'should raise an exception' do
+        lambda {do_handle}.should raise_error(Fakettp::Expectation::Error, 'Received unexpected request')
+      end
+    end
+    
+    describe 'when an error occurs while executing the expectation' do
+      before do
+        @expectation.stub!(:execute).and_raise Fakettp::Expectation::Error.new('foo')
+        @errors = stub :errors, :null_object => true
+        @expectation.stub!(:errors).and_return @errors
+      end
+      
+      it 'should add an error to the expectation' do
+        @errors.should_receive(:create).with(:message => 'foo')
         begin
           do_handle
         rescue Fakettp::Expectation::Error;end
