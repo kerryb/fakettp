@@ -77,13 +77,13 @@ describe Fakettp::Simulator do
     
     describe 'when an error occurs while executing the expectation' do
       before do
-        @expectation.stub!(:execute).and_raise Fakettp::Expectation::Error.new('foo')
+        @expectation.stub!(:execute).and_raise Fakettp::Expectation::Error.new('foo', 2)
         @errors = stub :errors, :null_object => true
         @expectation.stub!(:errors).and_return @errors
       end
       
       it 'should add an error to the expectation' do
-        @errors.should_receive(:create).with(:message => 'foo')
+        @errors.should_receive(:create).with(:message => 'foo', :line_number => 2)
         begin
           do_handle
         rescue Fakettp::Expectation::Error;end

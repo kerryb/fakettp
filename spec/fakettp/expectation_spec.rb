@@ -99,3 +99,17 @@ describe Fakettp::Expectation do
     end
   end
 end
+
+describe Fakettp::Expectation::Error do
+  it 'should store a message' do
+    Fakettp::Expectation::Error.new('foo', 2).message.should == 'foo'
+  end
+  
+  it 'should store a line number' do
+    Fakettp::Expectation::Error.new('foo', 2).line_number.should == 2
+  end
+  
+  it 'should default the line number to nil' do
+    Fakettp::Expectation::Error.new('foo').line_number.should be_nil
+  end
+end

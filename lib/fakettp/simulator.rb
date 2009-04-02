@@ -23,7 +23,7 @@ module Fakettp
         begin
           expectation.execute binding
         rescue Fakettp::Expectation::Error => e
-          expectation.errors.create :message => e.message
+          expectation.errors.create :message => e.message, :line_number => e.line_number
           raise e
         end
       else

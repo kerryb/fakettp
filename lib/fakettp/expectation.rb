@@ -5,7 +5,13 @@ module Fakettp
     set_table_name :expectations
     has_many :errors
     
-    class Error < Exception; end
+    class Error < StandardError
+      attr_reader :line_number
+      def initialize message, line_number = nil
+        @line_number = line_number
+        super(message)
+      end
+    end
             
     def render
       contents
