@@ -8,5 +8,6 @@ ActiveRecord::Schema.define do
 
   create_table :errors, :force => true do |t|
     t.text :message
+    t.integer :expectation_id
   end
 end

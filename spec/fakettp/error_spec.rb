@@ -11,6 +11,8 @@ describe Fakettp::Error do
   
   it { should have_db_column(:message).of_type(:text) }
   
+  it { should belong_to(:expectation) }
+  
   describe 'listing errors' do
     describe 'when errors exist' do
       before do

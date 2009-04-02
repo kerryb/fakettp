@@ -12,6 +12,8 @@ describe Fakettp::Expectation do
   it { should have_db_column(:contents).of_type(:text) }
 
   it { should have_db_column(:executed).of_type(:boolean) }
+  
+  it { should have_many(:errors) }
     
   it 'should start out unexecuted' do
     Fakettp::Expectation.create.executed.should be_false

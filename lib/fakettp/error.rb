@@ -1,6 +1,6 @@
 module Fakettp
   class Error < ActiveRecord::Base
-    ERROR_FILE = File.join FAKETTP_BASE, 'tmp', 'errors'
+    belongs_to :expectation
         
     def self.list
       errors = Error.all

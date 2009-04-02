@@ -3,6 +3,7 @@ require 'fakettp/db'
 module Fakettp
   class Expectation < ActiveRecord::Base
     set_table_name :expectations
+    has_many :errors
     
     class Error < Exception; end
             
