@@ -54,6 +54,10 @@
 <p>To have FakeTTP respond to multiple hostnames, create the appropriate hosts entries. If you&#8217;re using name-based virtual hosts in Apache, add a <em>ServerAlias</em> entry to the virtual host config, under the <em>ServerName</em> line, eg:</p>
 <p><code>ServerAlias foo.com bar.com</code></p>
 <h2>Change log</h2>
+<p>0.2.4.1 (5 May 2009)</p>
+<ul>
+	<li>Temporarily depend on edge version of Sinatra, to gain Rack 1.0 compatibility.</li>
+</ul>
 <p>0.2.4 (25 Mar 2009)</p>
 <ul>
 	<li>Fixed a bug which caused expectations to be run in the wrong order if there were more than nine of them.</li>
