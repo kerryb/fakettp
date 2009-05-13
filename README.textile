@@ -58,6 +58,10 @@ h3. Resetting
 
 To reset FakeTTP (ie remove all expectations and errors), make an HTTP POST request to @http://fakettp.local/reset@.
 
+h4. Calling from curl
+
+@curl fakettp.local/reset -X POST@
+
 h3. Setting expectations
 
 To create a new expectation, make an HTTP POST request to @http://fakettp.local/expect@, with a _Content-Type_ header of 'text/plain' and the request data containing a Ruby block to execute.
@@ -78,11 +82,21 @@ The label on the first line is used in error reporting.
 
 The expectation code has access to the underlying Sinatra request and response objects etc, as well as "RSpec":http://rspec.info matchers.
 
+h4. Calling from curl
+
+Assuming the expectation is in @expectation_file@:
+
+@curl -X POST fakettp.local/expect -X POST -H 'Content-Type:text/plain' --binary-data @expectation_file@
+
 h3. Verifying
 
 To verify that all expectations have been met, make an HTTP GET request to @http://fakettp.local/verify@.
 
 If all is well, the response will be a _200 OK_ with a body of 'OK'. Otherwise the status will be _400 Bad Request_, with a list of failures in the body. The failure messages include the complete details of the unexpected request that was received, to assist debugging.
+
+h4. Calling from curl
+
+@curl fakettp.local/verify@
 
 h3. Multiple hosts
 

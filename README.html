@@ -33,6 +33,8 @@
 <h2>Usage</h2>
 <h3>Resetting</h3>
 <p>To reset FakeTTP (ie remove all expectations and errors), make an <span class="caps">HTTP</span> <span class="caps">POST</span> request to <code>http://fakettp.local/reset</code>.</p>
+<h4>Calling from curl</h4>
+<p><code>curl fakettp.local/reset -X POST</code></p>
 <h3>Setting expectations</h3>
 <p>To create a new expectation, make an <span class="caps">HTTP</span> <span class="caps">POST</span> request to <code>http://fakettp.local/expect</code>, with a <em>Content-Type</em> header of &#8216;text/plain&#8217; and the request data containing a Ruby block to execute.</p>
 <p>The supplied code should be in the following format, and will generally consist of a number of assertions on the request, followed by creation of the response to return to the application under test.</p>
@@ -47,9 +49,14 @@
 </code></pre>
 <p>The label on the first line is used in error reporting.</p>
 <p>The expectation code has access to the underlying Sinatra request and response objects etc, as well as <a href="http://rspec.info">RSpec</a> matchers.</p>
+<h4>Calling from curl</h4>
+<p>Assuming the expectation is in <code>expectation_file</code>:</p>
+<p><code>curl -X POST fakettp.local/expect -X POST -H 'Content-Type:text/plain' --binary-data @expectation_file</code></p>
 <h3>Verifying</h3>
 <p>To verify that all expectations have been met, make an <span class="caps">HTTP</span> <span class="caps">GET</span> request to <code>http://fakettp.local/verify</code>.</p>
 <p>If all is well, the response will be a <em>200 OK</em> with a body of &#8216;OK&#8217;. Otherwise the status will be <em>400 Bad Request</em>, with a list of failures in the body. The failure messages include the complete details of the unexpected request that was received, to assist debugging.</p>
+<h4>Calling from curl</h4>
+<p><code>curl fakettp.local/verify</code></p>
 <h3>Multiple hosts</h3>
 <p>To have FakeTTP respond to multiple hostnames, create the appropriate hosts entries. If you&#8217;re using name-based virtual hosts in Apache, add a <em>ServerAlias</em> entry to the virtual host config, under the <em>ServerName</em> line, eg:</p>
 <p><code>ServerAlias foo.com bar.com</code></p>
