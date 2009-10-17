@@ -10,7 +10,7 @@ describe Fakettp::Error do
       FileUtils.touch @error_file
     end
     
-    it 'should remove the errors file' do
+    it 'removes the errors file' do
       Fakettp::Error.clear_all
       File.exists?(@error_file).should be_false
     end
@@ -22,7 +22,7 @@ describe Fakettp::Error do
         FileUtils.touch @error_file
       end
       
-      it 'should return false' do
+      it 'returns false' do
         Fakettp::Error.should_not be_empty
       end
     end
@@ -32,7 +32,7 @@ describe Fakettp::Error do
         FileUtils.rm_rf @error_file
       end
       
-      it 'should return false' do
+      it 'returns false' do
         Fakettp::Error.should be_empty
       end
     end
@@ -46,7 +46,7 @@ describe Fakettp::Error do
         end
       end
       
-      it 'should append the error message to the file' do
+      it 'appends the error message to the file' do
         Fakettp::Error << 'bar'
         File.read(@error_file).should == "foo\nbar\n"
       end
@@ -57,7 +57,7 @@ describe Fakettp::Error do
         FileUtils.rm_rf @error_file
       end
       
-      it 'should create the file and write the error message to it' do
+      it 'creates the file and write the error message to it' do
         Fakettp::Error << 'bar'
         File.read(@error_file).should == "bar\n"
       end
@@ -72,7 +72,7 @@ describe Fakettp::Error do
         end
       end
       
-      it 'should return the contents of the error file' do
+      it 'returns the contents of the error file' do
         Fakettp::Error.list.should == "foo\n"
       end
     end
@@ -82,7 +82,7 @@ describe Fakettp::Error do
         FileUtils.rm_rf @error_file
       end
       
-      it 'should return an empty string' do
+      it 'returns an empty string' do
         Fakettp::Error.list.should == ''
       end
     end

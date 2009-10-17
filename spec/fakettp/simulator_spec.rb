@@ -11,12 +11,12 @@ describe Fakettp::Simulator do
       Fakettp::Simulator.reset
     end
     
-    it 'should clear expectations' do
+    it 'clears expectations' do
       Fakettp::Expectation.should_receive :clear_all
       do_reset
     end
     
-    it 'should clear errors' do
+    it 'clears errors' do
       Fakettp::Error.should_receive :clear_all
       do_reset
     end
@@ -31,7 +31,7 @@ describe Fakettp::Simulator do
       Fakettp::Simulator << @expectation
     end
     
-    it 'should create a new expectation' do
+    it 'creates a new expectation' do
       Fakettp::Expectation.should_receive(:<<).with @expectation
       do_add
     end
@@ -49,12 +49,12 @@ describe Fakettp::Simulator do
       Fakettp::Simulator.handle_request @binding
     end
     
-    it 'should execute the next request' do
+    it 'executes the next request' do
       @expectation.should_receive(:execute).with @binding
       do_handle
     end
     
-    it 'should return the execution result' do
+    it 'returns the execution result' do
       do_handle.should == @result
     end
     
@@ -64,14 +64,14 @@ describe Fakettp::Simulator do
         Fakettp::Error.stub!(:<<)
       end
       
-      it 'should record the error' do
+      it 'records the error' do
         Fakettp::Error.should_receive(:<<).with 'foo'
         begin
           do_handle
         rescue Fakettp::Expectation::Error;end
       end
       
-      it 'should re-raise the exception' do
+      it 'res-raise the exception' do
         lambda {do_handle}.should raise_error(Fakettp::Expectation::Error, 'foo')
       end
     end
@@ -109,7 +109,7 @@ describe Fakettp::Simulator do
         Fakettp::Expectation.stub!(:empty?).and_return false
       end
       
-      it 'should add an error' do
+      it 'adds an error' do
         Fakettp::Error.should_receive(:<<).with 'Expected request not received'
         do_verify
       end
@@ -124,7 +124,7 @@ describe Fakettp::Simulator do
       Fakettp::Error.stub!(:list).and_return @errors
     end
     
-    it 'should return the error list' do
+    it 'returns the error list' do
       Fakettp::Simulator.list_errors.should == @errors
     end
   end
