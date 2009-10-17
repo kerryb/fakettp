@@ -13,7 +13,7 @@ describe Fakettp::ExpectationHelper do
     describe 'when a matcher exception occurs' do
       it 'should raise an exception' do
         lambda {
-          expect 'foo' do
+          Fakettp::ExpectationHelper.expect 'foo' do
             1.should == 2
           end
         }.should raise_error(Fakettp::Expectation::Error,
@@ -23,7 +23,7 @@ describe Fakettp::ExpectationHelper do
     
     describe 'when the block returns a value' do
       it 'should return the value' do
-        result = expect 'foo' do
+        result = Fakettp::ExpectationHelper.expect 'foo' do
           'bar'
         end
         result.should == 'bar'
