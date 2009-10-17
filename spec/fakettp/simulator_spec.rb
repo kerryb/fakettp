@@ -11,12 +11,12 @@ describe Fakettp::Simulator do
       Fakettp::Simulator.reset
     end
     
-    it 'should clear expectations' do
+    it 'clears expectations' do
       Fakettp::Expectation.should_receive :delete_all
       do_reset
     end
     
-    it 'should clear errors' do
+    it 'clears errors' do
       Fakettp::Error.should_receive :delete_all
       do_reset
     end
@@ -31,7 +31,7 @@ describe Fakettp::Simulator do
       Fakettp::Simulator << @expectation
     end
     
-    it 'should create a new expectation' do
+    it 'creates a new expectation' do
       Fakettp::Expectation.should_receive(:create!).with :contents => @expectation
       do_add
     end
@@ -49,12 +49,12 @@ describe Fakettp::Simulator do
       Fakettp::Simulator.handle_request @binding
     end
     
-    it 'should execute the next request' do
+    it 'executes the next request' do
       @expectation.should_receive(:execute).with @binding
       do_handle
     end
     
-    it 'should return the execution result' do
+    it 'returns the execution result' do
       do_handle.should == @result
     end
     
@@ -63,14 +63,14 @@ describe Fakettp::Simulator do
         Fakettp::Expectation.stub!(:next).and_return nil
       end
       
-      it 'should add an error' do
+      it 'adds an error' do
         Fakettp::Error.should_receive(:create!).with(:message => 'Received unexpected request')
         begin
           do_handle
         rescue Fakettp::Expectation::Error;end
       end
       
-      it 'should raise an exception' do
+      it 'raises an exception' do
         lambda {do_handle}.should raise_error(Fakettp::Expectation::Error, 'Received unexpected request')
       end
     end
@@ -82,14 +82,14 @@ describe Fakettp::Simulator do
         @expectation.stub!(:errors).and_return @errors
       end
       
-      it 'should add an error to the expectation' do
+      it 'adds an error to the expectation' do
         @errors.should_receive(:create).with(:message => 'foo', :line_number => 2)
         begin
           do_handle
         rescue Fakettp::Expectation::Error;end
       end
       
-      it 'should re-raise the exception' do
+      it 're-raises the exception' do
         lambda {do_handle}.should raise_error(Fakettp::Expectation::Error, 'foo')
       end
     end
@@ -127,7 +127,7 @@ describe Fakettp::Simulator do
         Fakettp::Expectation.stub!(:all_received?).and_return false
       end
       
-      it 'should add an error' do
+      it 'adds an error' do
         Fakettp::Error.should_receive(:create!).with(:message => 'Expected request not received')
         do_verify
       end
@@ -142,7 +142,7 @@ describe Fakettp::Simulator do
       Fakettp::Error.stub!(:list).and_return @errors
     end
     
-    it 'should return the error list' do
+    it 'returns the error list' do
       Fakettp::Simulator.list_errors.should == @errors
     end
   end

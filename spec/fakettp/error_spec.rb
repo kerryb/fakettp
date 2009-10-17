@@ -5,7 +5,7 @@ describe Fakettp::Error do
     Fakettp::Error.delete_all
   end
   
-  it 'should be an ActiveRecord' do
+  it 'is an ActiveRecord' do
     Fakettp::Error.new.should be_a_kind_of(ActiveRecord::Base)
   end
   
@@ -22,7 +22,7 @@ describe Fakettp::Error do
         Fakettp::Error.create! :message => 'bar'
       end
       
-      it 'should return the concatenated error messages' do
+      it 'returns the concatenated error messages' do
         Fakettp::Error.list.should == "foo\nbar\n"
       end
     end
@@ -32,7 +32,7 @@ describe Fakettp::Error do
         Fakettp::Error.delete_all
       end
       
-      it 'should return an empty string' do
+      it 'returns an empty string' do
         Fakettp::Error.list.should == ''
       end
     end

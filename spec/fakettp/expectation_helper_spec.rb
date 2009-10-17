@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Fakettp::ExpectationHelper do
-  it 'should mix in Spec::Matchers' do
+  it 'mixes in Spec::Matchers' do
     class Foo
       include Fakettp::ExpectationHelper
     end
@@ -11,9 +11,9 @@ describe Fakettp::ExpectationHelper do
   
   describe 'calling expect' do
     describe 'when a matcher exception occurs' do
-      it 'should raise an exception' do
+      it 'raises an exception' do
         lambda {
-          expect 'foo' do
+          Fakettp::ExpectationHelper.expect 'foo' do
             1.should == 2
           end
         }.should raise_error(Fakettp::Expectation::Error,
@@ -22,8 +22,8 @@ describe Fakettp::ExpectationHelper do
     end
     
     describe 'when the block returns a value' do
-      it 'should return the value' do
-        result = expect 'foo' do
+      it 'returns the value' do
+        result = Fakettp::ExpectationHelper.expect 'foo' do
           'bar'
         end
         result.should == 'bar'

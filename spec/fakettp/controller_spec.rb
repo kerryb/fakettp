@@ -8,7 +8,7 @@ describe 'Controller' do
     Fakettp::Simulator.reset
   end
   
-  it 'should mix in Fakettp::ExpectationHelper' do
+  it 'mixes in Fakettp::ExpectationHelper' do
     Sinatra::Application.included_modules.should include(Fakettp::ExpectationHelper)
   end
   
@@ -22,29 +22,29 @@ describe 'Controller' do
         post '/reset', nil, :host => 'fakettp.local'
       end
 
-      it 'should reset the simulator' do
+      it 'resets the simulator' do
         Fakettp::Simulator.should_receive :reset
         do_post
       end
 
-      it 'should be successful' do
+      it 'is successful' do
         do_post
         @response.should be_ok
       end
 
-      it 'should return a plain text response' do
+      it 'returns a plain text response' do
         do_post
         @response.content_type.should == 'text/plain'
       end
 
-      it 'should return an acknowledgement message' do
+      it 'returns an acknowledgement message' do
         do_post
         @response.body.should == "Reset OK\n"
       end
     end
     
     describe 'on a host other than fakettp.local' do
-      it 'should act like any other simulated request' do
+      it 'acts like any other simulated request' do
         post '/reset', nil, :host => 'foo.fake.local'
         response.body.should == "Simulator received mismatched request\n"
       end
@@ -62,29 +62,29 @@ describe 'Controller' do
         post '/expect', @body, :host => 'fakettp.local'
       end
 
-      it 'should set a simulator expectation using the request body' do
+      it 'sets a simulator expectation using the request body' do
         Fakettp::Simulator.should_receive(:<<).with @body
         do_post
       end
 
-      it 'should be successful' do
+      it 'is successful' do
         do_post
         @response.should be_ok
       end
 
-      it 'should return a plain text response' do
+      it 'returns a plain text response' do
         do_post
         @response.content_type.should == 'text/plain'
       end
 
-      it 'should return an acknowledgement message' do
+      it 'returns an acknowledgement message' do
         do_post
         @response.body.should == "Expect OK\n"
       end
     end
     
     describe 'on a host other than fakettp.local' do
-      it 'should act like any other simulated request' do
+      it 'acts like any other simulated request' do
         post '/expect', @body, :host => 'foo.fake.local'
         response.body.should == "Simulator received mismatched request\n"
       end
@@ -101,7 +101,7 @@ describe 'Controller' do
         send verb.downcase.to_sym, '/foo/bar'
       end
 
-      it 'should simulate handling the request' do
+      it 'simulates handling the request' do
         Fakettp::Simulator.should_receive(:handle_request).with(
             an_instance_of(Binding)).and_return ' '
         do_request
@@ -113,18 +113,18 @@ describe 'Controller' do
           Fakettp::Simulator.stub!(:handle_request).and_raise @error
         end
 
-        it 'should return a 500 status' do
+        it 'returns a 500 status' do
           do_request
           @response.status.should == 500
         end
 
-        it 'should return a plain text response' do
+        it 'returns a plain text response' do
           do_request
           @response.content_type.should == 'text/plain'
         end
 
         unless verb == 'HEAD' # No body for that one
-          it 'should return an error message' do
+          it 'returns an error message' do
             do_request
             @response.body.should == "Simulator received mismatched request\n"
           end
@@ -145,12 +145,12 @@ describe 'Controller' do
         get '/verify', nil, :host => 'fakettp.local'
       end
 
-      it 'should verify the simulator' do
+      it 'verifies the simulator' do
         Fakettp::Simulator.should_receive :verify
         do_get
       end
 
-      it 'should return a plain text response' do
+      it 'returns a plain text response' do
         do_get
         @response.content_type.should == 'text/plain'
       end
@@ -160,12 +160,12 @@ describe 'Controller' do
           Fakettp::Simulator.stub!(:verify).and_return true
         end
 
-        it 'should be successful' do
+        it 'is successful' do
           do_get
           @response.should be_ok
         end
 
-        it 'should return an acknowledgement message' do
+        it 'returns an acknowledgement message' do
           do_get
           @response.body.should == "Verify OK\n"
         end
@@ -176,12 +176,12 @@ describe 'Controller' do
           Fakettp::Simulator.stub!(:verify).and_return false
         end
 
-        it 'should return 500 Internal Error' do
+        it 'returns 500 Internal Error' do
           do_get
           @response.status.should == 500
         end
 
-        it 'should list the errors' do
+        it 'lists the errors' do
           do_get
           @response.body.should == @errors
         end
@@ -189,7 +189,7 @@ describe 'Controller' do
     end
     
     describe 'on a host other than fakettp.local' do
-      it 'should act like any other simulated request' do
+      it 'acts like any other simulated request' do
         get '/verify', nil, :host => 'foo.fake.local'
         response.body.should == "Simulator received mismatched request\n"
       end
@@ -209,28 +209,28 @@ describe 'Controller' do
         @response_doc = Hpricot(@response.body)
       end
 
-      it 'should return an html response' do
+      it 'returns an html response' do
         do_get
         response.content_type.should == 'text/html'
       end
       
-      it 'should set the title' do
+      it 'sets the title' do
         do_get
         (@response_doc/'head/title').inner_html.should == 'FakeTTP'
       end
       
-      it 'should render a div for each expectation' do
+      it 'renders a div for each expectation' do
         do_get
         @response_doc.search("//div[@class='expectation']").size.should == 2
       end
       
-      it 'should number the expectations' do
+      it 'numbers the expectations' do
         do_get
         (@response_doc/"//h1[1]").inner_html.should == '1'
         (@response_doc/"//h1[2]").inner_html.should == '2'
       end
       
-      it 'should display the expectation contents' do
+      it 'displays the expectation contents' do
         do_get
         (@response_doc/"//div[@class='expectation'][1]/pre").inner_html.should == 'foo'
         (@response_doc/"//div[@class='expectation'][2]/pre").inner_html.should == 'bar'
@@ -238,7 +238,7 @@ describe 'Controller' do
     end
     
     describe 'on a host other than fakettp.local' do
-      it 'should act like any other simulated request' do
+      it 'acts like any other simulated request' do
         get '/', nil, :host => 'foo.fake.local'
         response.body.should == "Simulator received mismatched request\n"
       end

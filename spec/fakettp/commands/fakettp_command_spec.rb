@@ -1,11 +1,11 @@
 require File.join(File.dirname(__FILE__), '..', '..', 'spec_helper')
 
 shared_examples_for 'incorrect usage' do
-  it 'should complete with non-zero status' do
+  it 'completes with non-zero status' do
     @command.run.should_not == 0
   end
   
-  it 'should print a usage method to stderr' do
+  it 'prints a usage method to stderr' do
     @command.run
     @local_std_error.string.should =~ /Usage:/
   end
@@ -56,11 +56,11 @@ describe Fakettp::Commands::FakettpCommand do
           FileUtils.mkdir_p @dir
         end
       
-        it 'should complete with non-zero status' do
+        it 'completes with non-zero status' do
           @command.run.should_not == 0
         end
         
-        it 'should print an error message to stderr' do
+        it 'prints an error message to stderr' do
           @command.run
           @local_std_error.string.should =~ /already exists/
         end
@@ -71,26 +71,26 @@ describe Fakettp::Commands::FakettpCommand do
           @status = @command.run
         end
         
-        it 'should create the directory' do
+        it 'creates the directory' do
           File.should be_a_directory(@dir)
         end
         
-        it 'should copy the correct files to the directory' do
+        it 'copies the correct files to the directory' do
           Dir.glob(@dir + '/**/*').reject {|f| f =~ /sqlite3$/}.sort.should ==
               ['config.ru', 'fakettp.yml', 'README.html', 'public',
               'public/fakettp.css', 'tmp'].sort.map {|f| "#{@dir}/#{f}"}
         end
         
-        it "should make the tmp directory world-read/writeable" do
+        it "makes the tmp directory world-read/writeable" do
           (File.stat(@dir + "/tmp").mode & 0777).should == 0777
         end
         
-        it 'should create the database' do
+        it 'creates the database' do
           run_from = File.dirname(__FILE__) + '/../../../lib'
           `cd #{run_from};ruby -e "FAKETTP_BASE = '#{File.expand_path(@dir)}';require 'fakettp/expectation';p Fakettp::Expectation.new"`.should =~ /executed: false/
         end
     
-        it 'should complete with zero status' do
+        it 'completes with zero status' do
           @status.should == 0
         end
       end
