@@ -89,7 +89,7 @@ end
 
 desc 'remove all build products'
 task :clean do
-  FileUtils.rm_rf %w(install README.html coverage pkg)
+  FileUtils.rm_rf %w(tmp install README.html coverage pkg)
 end
 
 desc 'Create README.html from README.textile'
@@ -106,7 +106,7 @@ end
 desc 'Install FakeTTP into local install directory'
 task :test_install do
   rm_rf 'install'
-  system 'fakettp install install'
+  system 'fakettp install install fakettp.local'
   touch 'install/tmp/restart.txt'
 end
 

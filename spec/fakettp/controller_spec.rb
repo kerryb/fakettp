@@ -3,7 +3,10 @@ require 'hpricot'
 
 describe 'Controller' do
   include Sinatra::Test
-  
+  before :all do
+    @host = YAML.load(File.read(FAKETTP_BASE + '/fakettp.yml'))['hostname']
+  end
+
   before do
     Fakettp::Simulator.reset
   end
@@ -17,9 +20,9 @@ describe 'Controller' do
       Fakettp::Simulator.stub! :reset
     end
 
-    describe 'on fakettp.local' do
+    describe 'on the fakettp host' do
       def do_post
-        post '/reset', nil, :host => 'fakettp.local'
+        post '/reset', nil, :host => @host
       end
 
       it 'resets the simulator' do
@@ -43,7 +46,7 @@ describe 'Controller' do
       end
     end
     
-    describe 'on a host other than fakettp.local' do
+    describe 'on another host' do
       it 'acts like any other simulated request' do
         post '/reset', nil, :host => 'foo.fake.local'
         response.body.should == "Simulator received mismatched request\n"
@@ -57,9 +60,9 @@ describe 'Controller' do
       Fakettp::Simulator.stub! :<<
     end
 
-    describe 'on fakettp.local' do
+    describe 'on the fakettp host' do
       def do_post
-        post '/expect', @body, :host => 'fakettp.local'
+        post '/expect', @body, :host => @host
       end
 
       it 'sets a simulator expectation using the request body' do
@@ -83,7 +86,7 @@ describe 'Controller' do
       end
     end
     
-    describe 'on a host other than fakettp.local' do
+    describe 'on another host' do
       it 'acts like any other simulated request' do
         post '/expect', @body, :host => 'foo.fake.local'
         response.body.should == "Simulator received mismatched request\n"
@@ -140,9 +143,9 @@ describe 'Controller' do
       Fakettp::Simulator.stub!(:list_errors).and_return @errors
     end
 
-    describe 'on fakettp.local' do
+    describe 'on the fakettp host' do
       def do_get
-        get '/verify', nil, :host => 'fakettp.local'
+        get '/verify', nil, :host => @host
       end
 
       it 'verifies the simulator' do
@@ -188,7 +191,7 @@ describe 'Controller' do
       end
     end
     
-    describe 'on a host other than fakettp.local' do
+    describe 'on another host' do
       it 'acts like any other simulated request' do
         get '/verify', nil, :host => 'foo.fake.local'
         response.body.should == "Simulator received mismatched request\n"
@@ -197,7 +200,7 @@ describe 'Controller' do
   end
 
   describe 'getting /' do
-    describe 'on fakettp.local' do
+    describe 'on the fakettp host' do
       before do
         expectation_1 = stub :expectation, :id => 1, :render => 'foo'
         expectation_2 = stub :expectation, :id => 2, :render => 'bar'
@@ -205,7 +208,7 @@ describe 'Controller' do
       end
       
       def do_get
-        get '/', nil, :host => 'fakettp.local'
+        get '/', nil, :host => @host
         @response_doc = Hpricot(@response.body)
       end
 
@@ -237,7 +240,7 @@ describe 'Controller' do
       end
     end
     
-    describe 'on a host other than fakettp.local' do
+    describe 'on another host' do
       it 'acts like any other simulated request' do
         get '/', nil, :host => 'foo.fake.local'
         response.body.should == "Simulator received mismatched request\n"

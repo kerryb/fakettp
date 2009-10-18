@@ -6,7 +6,7 @@ module Fakettp
       end
   
       def run
-        command = get_command
+        command = @args[0]
         return usage unless command
         case command
         when 'install' then
@@ -17,39 +17,47 @@ module Fakettp
       end
   
       private
-  
-      def get_command
-        @args[0]
-      end
       
       def install
-        dir = get_dir
-        return usage unless dir
-        if File.exist? dir
-          $stderr.puts "File or directory #{dir} already exists."
+        @directory, @hostname = @args[1..2]
+        return usage unless @directory && @hostname
+        if File.exist? @directory
+          $stderr.puts "File or directory #{@directory} already exists."
           return 1
         end
-        FileUtils.mkdir_p dir + '/tmp', :mode => 0777
-        FileUtils.mkdir_p dir + '/public'
-        FileUtils.cp File.dirname(__FILE__) + '/../config.ru', dir
-        FileUtils.cp File.dirname(__FILE__) + '/../fakettp.yml', dir
-        FileUtils.cp File.dirname(__FILE__) + '/../../../README.html', dir
-        FileUtils.cp File.dirname(__FILE__) + '/../public/fakettp.css',
-            dir + '/public'
-
-        system %(ruby -e "FAKETTP_BASE = '#{dir}';load '#{File.dirname(__FILE__)}/../schema.rb'")
+        copy_files
+        write_config
+        create_database
         return 0
       end
-      
-      def get_dir
-        @args[1]
-      end
   
+      def copy_files
+        FileUtils.mkdir_p @directory + '/tmp', :mode => 0777
+        FileUtils.mkdir_p @directory + '/public'
+        FileUtils.cp File.dirname(__FILE__) + '/../config.ru', @directory
+        FileUtils.cp File.dirname(__FILE__) + '/../../../README.html', @directory
+        FileUtils.cp File.dirname(__FILE__) + '/../public/fakettp.css', @directory + '/public'
+      end
+
+      def write_config
+        config = {'database' => {'adapter' => 'sqlite3', 'database' => 'fakettp.sqlite3'},
+          'hostname' => @hostname
+        }
+        File.open @directory + '/fakettp.yml', 'w' do |file|
+          file.write config.to_yaml
+        end
+      end
+
+      def create_database
+        system %(ruby -e "FAKETTP_BASE = '#{@directory}';load '#{File.dirname(__FILE__)}/../schema.rb'")
+      end
+
       def usage
         $stderr.puts <<-EOF
 Usage:
 
-  [TODO]
+  fakettp install <directory> <hostname>
+
 EOF
         return 1
       end

@@ -9,6 +9,10 @@ require 'fakettp/expectation'
 
 set :views, File.join(File.dirname(__FILE__), 'views')
 
+config_file = File.join(FAKETTP_BASE, 'fakettp.yml')
+config = File.read config_file
+host = YAML.load(config)['hostname']
+
 include Fakettp::ExpectationHelper
 
 post '/expect', :host => 'fakettp.local' do
