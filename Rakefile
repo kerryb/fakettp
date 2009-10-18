@@ -4,6 +4,10 @@ require 'spec/rake/spectask'
 require 'spec/rake/verify_rcov'
 require 'redcloth'
 
+desc 'run specs, create gem, install and test'
+task :default => [:rcov, :verify_rcov, :create_readme, :gemspec, :build,
+  :local_install, :test_install, :'cucumber:all', :ok]
+
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
@@ -48,11 +52,22 @@ end
 
 begin
   require 'cucumber/rake/task'
-  Cucumber::Rake::Task.new(:features)
+  namespace :cucumber do
+    Cucumber::Rake::Task.new({:ok => :check_dependencies}, 'Run features that should pass') do |t|
+      t.cucumber_opts = "--color --tags ~@wip --strict --format 'pretty'"
+    end
 
-  task :features => :check_dependencies
+    Cucumber::Rake::Task.new({:wip => :check_dependencies}, 'Run features that are being worked on') do |t|
+      t.cucumber_opts = "--color --tags @wip:2 --wip --format 'pretty'"
+    end
+
+    desc 'Run all features'
+    task :all => [:ok, :wip]
+  end
+  desc 'Alias for cucumber:ok'
+  task :cucumber => 'cucumber:ok'
 rescue LoadError
-  task :features do
+  task :cucumber do
     abort "Cucumber is not available. In order to run features, you must: sudo gem install cucumber"
   end
 end
@@ -70,16 +85,11 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
- 
-# -------------------------------------------------------
 
 desc 'remove all build products'
 task :clean do
   FileUtils.rm_rf %w(install README.html coverage pkg)
 end
-
-desc 'run specs, create gem, install and test'
-task :default => [:rcov, :verify_rcov, :create_readme, :gemspec, :build, :local_install, :test_install, :features]
 
 desc 'Create README.html from README.textile'
 task :create_readme do
@@ -97,4 +107,15 @@ task :test_install do
   rm_rf 'install'
   system 'fakettp install install'
   touch 'install/tmp/restart.txt'
+end
+
+task :ok do
+  red    = "\e[31m"
+  yellow = "\e[33m"
+  green  = "\e[32m"
+  blue   = "\e[34m"
+  purple = "\e[35m"
+  bold   = "\e[1m"
+  normal = "\e[0m"
+  puts "", "#{bold}#{red}*#{yellow}*#{green}*#{blue}*#{purple}* #{green} ALL TESTS PASSED #{purple}*#{blue}*#{green}*#{yellow}*#{red}*#{normal}"
 end

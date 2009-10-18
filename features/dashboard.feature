@@ -22,6 +22,7 @@ Feature: Dashboard for debugging failures
       end
       """
 
+  @wip
   Scenario: Highlight passed and failed lines
     Given the simulator is reset
     And we expect pass_and_fail
