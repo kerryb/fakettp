@@ -14,7 +14,12 @@ module Fakettp
     end
             
     def render
-      contents
+      if executed
+        span_class = errors.empty? ? 'pass' : 'fail'
+        %(<span class="#{span_class}">#{contents}</span>)
+      else
+        contents
+      end
     end
     
     def execute binding

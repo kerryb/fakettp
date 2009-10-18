@@ -78,11 +78,38 @@ describe Fakettp::Expectation do
   end
   
   describe 'rendering itself' do
-    it 'shows its contents' do
-      Fakettp::Expectation.new(:contents => 'foo').render.should == 'foo'
+    before do
+      @expectation = Fakettp::Expectation.new(:contents => 'foo')
+    end
+
+    describe 'when not executed' do
+      it 'shows its contents' do
+        @expectation.render.should == 'foo'
+      end
+    end
+
+    describe 'when executed successfully' do
+      before do
+        @expectation.executed = true
+      end
+
+      it %(shows its contents in a 'pass' span) do
+        @expectation.render.should == '<span class="pass">foo</span>'
+      end
+    end
+
+    describe 'when executed with errors' do
+      before do
+        @expectation.executed = true
+        @expectation.errors = [Fakettp::Error.new]
+      end
+
+      it %(shows its contents in a 'fail' span) do
+        @expectation.render.should == '<span class="fail">foo</span>'
+      end
     end
   end
-  
+
   describe 'executing' do
     it 'evals the expectation code in the context of the supplied binding' do
       def getBinding(n)
@@ -90,7 +117,7 @@ describe Fakettp::Expectation do
       end
       Fakettp::Expectation.new(:contents => 'n + 2').execute(getBinding(2)).should == 4
     end
-    
+
     it 'marks itself as executed' do
       expectation = Fakettp::Expectation.create! :contents => ''
       expectation.execute binding
