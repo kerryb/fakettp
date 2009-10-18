@@ -2,11 +2,9 @@ require 'rubygems'
 require 'rake'
 require 'spec/rake/spectask'
 require 'spec/rake/verify_rcov'
-require 'redcloth'
 
 desc 'run specs, create gem, install and test'
-task :default => [:rcov, :verify_rcov, :create_readme, :gemspec, :build,
-  :local_install, :test_install, :'cucumber:all', :ok]
+task :default => [:rcov, :verify_rcov, :gemspec, :build, :local_install, :test_install, :'cucumber:all', :ok]
 
 begin
   require 'jeweler'
@@ -34,7 +32,6 @@ Spec::Rake::SpecTask.new(:spec) do |spec|
   spec.libs << 'lib' << 'spec'
   spec.spec_files = FileList['spec/**/*_spec.rb']
 end
-task :spec => :create_readme
 
 Spec::Rake::SpecTask.new(:rcov) do |spec|
   spec.libs << 'lib' << 'spec'
@@ -89,14 +86,7 @@ end
 
 desc 'remove all build products'
 task :clean do
-  FileUtils.rm_rf %w(tmp install README.html coverage pkg)
-end
-
-desc 'Create README.html from README.textile'
-task :create_readme do
-  File.open 'README.html', 'w' do |f|
-    f.write RedCloth.new(File.read('README.textile')).to_html
-  end
+  FileUtils.rm_rf %w(tmp install coverage pkg)
 end
 
 task :local_install do

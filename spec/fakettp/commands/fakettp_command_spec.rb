@@ -90,8 +90,8 @@ describe Fakettp::Commands::FakettpCommand do
 
           it 'copies the correct files to the directory' do
             Dir.glob(@dir + '/**/*').reject {|f| f =~ /sqlite3$/}.sort.should ==
-              ['config.ru', 'fakettp.yml', 'README.html', 'public',
-                'public/fakettp.css', 'tmp'].sort.map {|f| "#{@dir}/#{f}"}
+              ['config.ru', 'fakettp.yml', 'public', 'public/fakettp.css',
+                'tmp'].sort.map {|f| "#{@dir}/#{f}"}
           end
 
           it 'writes the database details and hostname to fakettp.yml' do

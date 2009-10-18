@@ -35,7 +35,6 @@ module Fakettp
         FileUtils.mkdir_p @directory + '/tmp', :mode => 0777
         FileUtils.mkdir_p @directory + '/public'
         FileUtils.cp File.dirname(__FILE__) + '/../config.ru', @directory
-        FileUtils.cp File.dirname(__FILE__) + '/../../../README.html', @directory
         FileUtils.cp File.dirname(__FILE__) + '/../public/fakettp.css', @directory + '/public'
       end
 
