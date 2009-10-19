@@ -17,6 +17,7 @@ begin
     gem.authors = ["Kerry Buckley"]
     gem.add_dependency 'sinatra-sinatra'
     gem.add_dependency 'sqlite3-ruby'
+    gem.add_development_dependency 'jeweler'
     gem.add_development_dependency 'rcov'
     gem.add_development_dependency "rspec"
     gem.add_development_dependency "cucumber"
