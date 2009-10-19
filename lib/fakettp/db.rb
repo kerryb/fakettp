@@ -1,3 +1,6 @@
+# TODO: this is evil, but I can't get it to work without.
+# http://gist.github.com/54177
+require 'rubygems'
 require 'activerecord'
 
 RAILS_ROOT = FAKETTP_BASE
