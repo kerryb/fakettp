@@ -26,7 +26,7 @@ Feature: Dashboard for debugging failures
   Scenario: Highlight passed and failed lines
     Given the simulator is reset
     And we expect pass_and_fail
-    And we get / on foo.fake.local
+    And we get / on foo.fakettp.fake.local
     When we get / on fakettp.local
     Then //div[1]/pre in the response should be:
       """

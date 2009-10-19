@@ -15,19 +15,19 @@ host = YAML.load(config)['hostname']
 
 include Fakettp::ExpectationHelper
 
-post '/expect', :host => 'fakettp.local' do
+send :post, '/expect', :host => host do
   Fakettp::Simulator << request.body.read
   content_type 'text/plain'
   "Expect OK\n"
 end
 
-post '/reset', :host => 'fakettp.local' do
+send :post, '/reset', :host => host do
   Fakettp::Simulator.reset
   content_type 'text/plain'
   "Reset OK\n"
 end
 
-get '/verify', :host => 'fakettp.local' do
+send :get, '/verify', :host => host do
   content_type 'text/plain'
   if Fakettp::Simulator.verify
     "Verify OK\n"
@@ -36,7 +36,7 @@ get '/verify', :host => 'fakettp.local' do
   end
 end
 
-get '/', :host => 'fakettp.local' do
+send :get, '/', :host => host do
   content_type 'text/html'
   @expectations = Fakettp::Expectation.all
   erb :index
