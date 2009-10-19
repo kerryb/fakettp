@@ -33,11 +33,15 @@ You can install FakeTTP anywhere that your web server user can see it:
 
   fakettp install <directory> <hostname>
 
-Set _hostname_ to the host you want to use for FakeTTP control requests (the
-examples below use <tt>fakettp.local</tt>). You can install multiple copies
+Set _hostname_ to the host you want to use for FakeTTP control requests
+
+You can install multiple copies
 and run them independently by using different directories and hostnames (for
 example on a CI server to prevent clashes when building multiple projects
 in parallel).
+
+The examples below assume that all fakettp hostnames end with
+<tt>fakettp.local</tt>.
 
 === Point your web server at the directory
 
@@ -47,6 +51,8 @@ the correct directory. For example, using Passenger[http://www.modrails.com/]
 
   <VirtualHost *:80>
     ServerName fakettp.local
+    ServerAlias *.fakettp.local
+    ServerAlias *.fake.local
     DocumentRoot "/path/to/fakettp/public"
     <directory "/path/to/fakettp/public">
       Order deny,allow
@@ -55,11 +61,16 @@ the correct directory. For example, using Passenger[http://www.modrails.com/]
     </directory>
   </VirtualHost>
 
-Then make sure <tt>fakettp.local</tt> resolves to 127.0.0.1 (assuming you're
+This will make FakeTTP handle requests to any hosts ending with
+<tt>.fake.local</tt>. If you want to simulate other hosts, add more aliases.
+
+Now make sure <tt>fakettp.local</tt> and any simulated hosts resolve to
+127.0.0.1 (assuming you're
 running the simulator on the same machine as the application under test), eg
 by adding the following line to <tt>/etc/hosts</tt>:
 
   127.0.0.1	fakettp.local
+  127.0.0.1 some-app.fake.local
 
 === IMPORTANT: security note
 
@@ -131,14 +142,6 @@ Point your browser at http://fakettp.local/
 
 Currently this is very basic, just showing the expectations from the last run.
 
-=== Multiple faked hosts
-
-To have FakeTTP respond to multiple hostnames, create the appropriate hosts
-entries. If you're using name-based virtual hosts in Apache, add a
-_ServerAlias_ entry to the virtual host config, under the _ServerName_ line, eg:
-
-  ServerAlias foo.com bar.com
-
 == Change log
 
 0.3.0 (18 May 2009)
@@ -199,3 +202,4 @@ expectation, and just put the return value on the last line of the _expect_ bloc
 * Provide Ruby API to set expectations etc
 * Return the expected content type even if expectation fails
 * Highlight failed lines in console
+* Remove require of rubygems from db.rb
