@@ -4,4 +4,3 @@ install
 testinstall
 coverage
 tmtags
-*.gemspec
