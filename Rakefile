@@ -15,8 +15,9 @@ begin
     gem.email = "kerryjbuckley@gmail.com"
     gem.homepage = "http://github.com/kerryb/fakettp"
     gem.authors = ["Kerry Buckley"]
-    gem.add_dependency 'sinatra-sinatra'
+    gem.add_dependency 'sinatra-sinatra', '>=0.10.1'
     gem.add_dependency 'sqlite3-ruby'
+    gem.add_dependency 'activerecord'
     gem.add_development_dependency 'jeweler'
     gem.add_development_dependency 'rcov'
     gem.add_development_dependency "rspec"
