@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "bin/fakettp",
+     "fakettp.gemspec",
      "features/control.feature",
      "features/dashboard.feature",
      "features/expectations.feature",
