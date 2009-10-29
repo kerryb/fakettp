@@ -1,5 +1,4 @@
 require 'rubygems'
-#require 'sinatra/lib/sinatra.rb'
 require 'sinatra'
  
 Sinatra::Application.default_options.merge!(
