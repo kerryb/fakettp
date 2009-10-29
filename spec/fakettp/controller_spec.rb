@@ -2,7 +2,12 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require 'hpricot'
 
 describe 'Controller' do
-  include Sinatra::Test
+  include Rack::Test::Methods
+
+  def app
+    Sinatra::Application
+  end
+  
   before :all do
     @host = YAML.load(File.read(FAKETTP_BASE + '/fakettp.yml'))['hostname']
   end
@@ -22,7 +27,7 @@ describe 'Controller' do
 
     describe 'on the fakettp host' do
       def do_post
-        post '/reset', nil, :host => @host
+        post '/reset', nil, 'HTTP_HOST' => @host
       end
 
       it 'resets the simulator' do
@@ -32,24 +37,24 @@ describe 'Controller' do
 
       it 'is successful' do
         do_post
-        @response.should be_ok
+        last_response.should be_ok
       end
 
       it 'returns a plain text response' do
         do_post
-        @response.content_type.should == 'text/plain'
+        last_response.content_type.should == 'text/plain'
       end
 
       it 'returns an acknowledgement message' do
         do_post
-        @response.body.should == "Reset OK\n"
+        last_response.body.should == "Reset OK\n"
       end
     end
     
     describe 'on another host' do
       it 'acts like any other simulated request' do
-        post '/reset', nil, :host => 'foo.fake.local'
-        response.body.should == "Simulator received mismatched request\n"
+        post '/reset', nil, 'HTTP_HOST' => 'foo.fake.local'
+        last_response.body.should == "Simulator received mismatched request\n"
       end
     end
   end
@@ -62,7 +67,7 @@ describe 'Controller' do
 
     describe 'on the fakettp host' do
       def do_post
-        post '/expect', @body, :host => @host
+        post '/expect', @body, 'HTTP_HOST' => @host
       end
 
       it 'sets a simulator expectation using the request body' do
@@ -72,24 +77,24 @@ describe 'Controller' do
 
       it 'is successful' do
         do_post
-        @response.should be_ok
+        last_response.should be_ok
       end
 
       it 'returns a plain text response' do
         do_post
-        @response.content_type.should == 'text/plain'
+        last_response.content_type.should == 'text/plain'
       end
 
       it 'returns an acknowledgement message' do
         do_post
-        @response.body.should == "Expect OK\n"
+        last_response.body.should == "Expect OK\n"
       end
     end
     
     describe 'on another host' do
       it 'acts like any other simulated request' do
-        post '/expect', @body, :host => 'foo.fake.local'
-        response.body.should == "Simulator received mismatched request\n"
+        post '/expect', @body, 'HTTP_HOST' => 'foo.fake.local'
+        last_response.body.should == "Simulator received mismatched request\n"
       end
     end
   end
@@ -118,18 +123,18 @@ describe 'Controller' do
 
         it 'returns a 500 status' do
           do_request
-          @response.status.should == 500
+          last_response.status.should == 500
         end
 
         it 'returns a plain text response' do
           do_request
-          @response.content_type.should == 'text/plain'
+          last_response.content_type.should == 'text/plain'
         end
 
         unless verb == 'HEAD' # No body for that one
           it 'returns an error message' do
             do_request
-            @response.body.should == "Simulator received mismatched request\n"
+            last_response.body.should == "Simulator received mismatched request\n"
           end
         end
       end
@@ -145,7 +150,7 @@ describe 'Controller' do
 
     describe 'on the fakettp host' do
       def do_get
-        get '/verify', nil, :host => @host
+        get '/verify', nil, 'HTTP_HOST' => @host
       end
 
       it 'verifies the simulator' do
@@ -155,7 +160,7 @@ describe 'Controller' do
 
       it 'returns a plain text response' do
         do_get
-        @response.content_type.should == 'text/plain'
+        last_response.content_type.should == 'text/plain'
       end
 
       describe 'when verification succeeds' do
@@ -165,12 +170,12 @@ describe 'Controller' do
 
         it 'is successful' do
           do_get
-          @response.should be_ok
+          last_response.should be_ok
         end
 
         it 'returns an acknowledgement message' do
           do_get
-          @response.body.should == "Verify OK\n"
+          last_response.body.should == "Verify OK\n"
         end
       end
 
@@ -181,20 +186,20 @@ describe 'Controller' do
 
         it 'returns 500 Internal Error' do
           do_get
-          @response.status.should == 500
+          last_response.status.should == 500
         end
 
         it 'lists the errors' do
           do_get
-          @response.body.should == @errors
+          last_response.body.should == @errors
         end
       end
     end
     
     describe 'on another host' do
       it 'acts like any other simulated request' do
-        get '/verify', nil, :host => 'foo.fake.local'
-        response.body.should == "Simulator received mismatched request\n"
+        get '/verify', nil, 'HTTP_HOST' => 'foo.fake.local'
+        last_response.body.should == "Simulator received mismatched request\n"
       end
     end
   end
@@ -208,13 +213,13 @@ describe 'Controller' do
       end
       
       def do_get
-        get '/', nil, :host => @host
-        @response_doc = Hpricot(@response.body)
+        get '/', nil, 'HTTP_HOST' => @host
+        @response_doc = Hpricot(last_response.body)
       end
 
       it 'returns an html response' do
         do_get
-        response.content_type.should == 'text/html'
+        last_response.content_type.should == 'text/html'
       end
       
       it 'sets the title' do
@@ -242,8 +247,8 @@ describe 'Controller' do
     
     describe 'on another host' do
       it 'acts like any other simulated request' do
-        get '/', nil, :host => 'foo.fake.local'
-        response.body.should == "Simulator received mismatched request\n"
+        get '/', nil, 'HTTP_HOST' => 'foo.fake.local'
+        last_response.body.should == "Simulator received mismatched request\n"
       end
     end
   end

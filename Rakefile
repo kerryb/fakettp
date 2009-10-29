@@ -20,8 +20,9 @@ begin
     gem.add_dependency 'activerecord'
     gem.add_development_dependency 'jeweler'
     gem.add_development_dependency 'rcov'
-    gem.add_development_dependency "rspec"
-    gem.add_development_dependency "cucumber"
+    gem.add_development_dependency 'rspec'
+    gem.add_development_dependency 'rack-test'
+    gem.add_development_dependency 'cucumber'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new

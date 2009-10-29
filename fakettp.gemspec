@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Kerry Buckley"]
-  s.date = %q{2009-10-19}
+  s.date = %q{2009-10-29}
   s.default_executable = %q{fakettp}
   s.description = %q{HTTP server mocking tool}
   s.email = %q{kerryjbuckley@gmail.com}
@@ -89,6 +89,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<jeweler>, [">= 0"])
       s.add_development_dependency(%q<rcov>, [">= 0"])
       s.add_development_dependency(%q<rspec>, [">= 0"])
+      s.add_development_dependency(%q<rack-test>, [">= 0"])
       s.add_development_dependency(%q<cucumber>, [">= 0"])
     else
       s.add_dependency(%q<sinatra-sinatra>, [">= 0.10.1"])
@@ -97,6 +98,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<jeweler>, [">= 0"])
       s.add_dependency(%q<rcov>, [">= 0"])
       s.add_dependency(%q<rspec>, [">= 0"])
+      s.add_dependency(%q<rack-test>, [">= 0"])
       s.add_dependency(%q<cucumber>, [">= 0"])
     end
   else
@@ -106,6 +108,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<jeweler>, [">= 0"])
     s.add_dependency(%q<rcov>, [">= 0"])
     s.add_dependency(%q<rspec>, [">= 0"])
+    s.add_dependency(%q<rack-test>, [">= 0"])
     s.add_dependency(%q<cucumber>, [">= 0"])
   end
 end
