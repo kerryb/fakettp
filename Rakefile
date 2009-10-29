@@ -93,7 +93,7 @@ task :clean do
 end
 
 task :local_install do
-  system 'sudo gem in -l pkg/*'
+  system "sudo gem in -l pkg/fakettp-#{File.read('VERSION').chomp}.gem"
 end
 
 desc 'Install FakeTTP into local install directory'
