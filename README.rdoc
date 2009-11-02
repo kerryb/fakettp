@@ -3,7 +3,7 @@
 == Purpose
 
 When you are writing acceptance/integration tests for an application which
-makes HTTP requests to a remote application, sometimes you need to be able
+makes HTTP requests to a remote service, sometimes you need to be able
 to test the interactions in different scenarios without talking to a real
 instance of the remote application.
 
@@ -12,6 +12,14 @@ set and verify expectations on the requests your application makes, and
 return suitable responses to those requests).
 
 == Installation
+
+=== Dependencies
+
+FakeTTP uses Sqlite3 by default (although it's possible to use another
+database by editing <tt>fakettp.yml</tt> after installation).
+
+It also depends on the <tt>sqlite3-ruby</tt>, <tt>activerecord</tt> and
+<tt>sinatra</tt> gems, which will be installed automatically if necessary.
 
 === Install the gem
 
