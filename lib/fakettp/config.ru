@@ -1,11 +1,9 @@
 require 'rubygems'
 require 'sinatra'
  
-Sinatra::Application.default_options.merge!(
-  :run => false,
-  :env => :production,
-  :raise_errors => true
-)
+Sinatra::Default.set :run, false
+Sinatra::Default.set :environment, :production
+Sinatra::Default.set :raise_errors, true
  
 log = File.new("fakettp.log", "a")
 STDOUT.reopen(log)
