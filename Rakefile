@@ -18,9 +18,9 @@ begin
     gem.add_dependency 'sinatra', '>=0.9.4'
     gem.add_dependency 'sqlite3-ruby'
     gem.add_dependency 'activerecord'
+    gem.add_dependency 'rspec'
     gem.add_development_dependency 'jeweler'
     gem.add_development_dependency 'rcov'
-    gem.add_development_dependency 'rspec'
     gem.add_development_dependency 'rack-test'
     gem.add_development_dependency 'cucumber'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

@@ -157,6 +157,10 @@ _ServerAlias_ entry to the virtual host config, under the _ServerName_ line, eg:
 
 == Change log
 
+0.3.6 (3 November 2009)
+
+* Properly include rspec as a *runtime* dependency.
+
 0.3.5 (3 November 2009)
 
 * Fixed Sinatra deprecation warnings from config.ru.
