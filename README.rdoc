@@ -157,6 +157,28 @@ _ServerAlias_ entry to the virtual host config, under the _ServerName_ line, eg:
 
 == Change log
 
+0.3.5 (3 November 2009)
+
+* Fixed Sinatra deprecation warnings from config.ru.
+
+0.3.4 (2 november 2009)
+
+* Depend on release Sinatra instead of edge.
+
+0.3.3 (29 October 2009)
+
+* Log to fakettp.log in installed directory.
+* Switch from Sinatra::Test to Rack::Test.
+
+0.3.2 (19 October 2009)
+
+* Accidentally bumped version number twice :-(
+
+0.3.1 (19 October 2009)
+
+* Added missing dependencies.
+* Allow specification of hostname on installation.
+
 0.3.0 (19 May 2009)
 
 * Fixed some issues with multiple hosts
