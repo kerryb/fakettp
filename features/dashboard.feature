@@ -34,13 +34,24 @@ Feature: Dashboard for debugging failures
     Then //body/div[2]/@class in the response should be 'request fail'
     Then //body/div[3]/@class in the response should be 'request pending'
 
+  Scenario: Show error message for failed expectation
+    Given the simulator is reset
+    And we expect get_root
+    And we get /foo on foo.fakettp.fake.local
+    When we get / on fakettp.local
+    Then //body/div/div[@class='error']/pre in the response should be:
+      """
+      Error in GET /: expected: "/",
+           got: "/foo" (using ==)
+      """
+
   @wip
   Scenario: Highlight passed and failed lines
     Given the simulator is reset
     And we expect pass_and_fail
     And we get / on foo.fakettp.fake.local
     When we get / on fakettp.local
-    Then //div/div/pre[@class='expectation'] in the response should be:
+    Then //div/div[@class='expectation']/pre in the response should be:
       """
       <span class="pass">expect "pass and fail" do
         (2 + 2).should == 4</span>

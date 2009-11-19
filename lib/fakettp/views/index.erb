@@ -8,8 +8,13 @@
       <div class="request <%= expectation.status %>">
         <h1><%= index + 1 %></h1>
         <div class="expectation">
-        <pre><%= expectation.contents %></pre>
+          <pre><%= expectation.contents %></pre>
         </div>
+        <% unless expectation.errors.empty? %>
+          <div class="error">
+            <pre><%= expectation.errors.first.message %></pre>
+          </div>
+        <% end %>
       </div>
     <% end %>
   </body>

@@ -146,6 +146,8 @@ was received, to assist debugging.
 Point your browser at http://fakettp.local/
 
 Currently this is very basic, just showing the expectations from the last run.
+Expectations are colour-coded according to status, and any error messages are
+shown.
 
 === Multiple faked hosts
 
@@ -156,6 +158,11 @@ _ServerAlias_ entry to the virtual host config, under the _ServerName_ line, eg:
   ServerAlias foo.com bar.com
 
 == Change log
+
+0.3.7 (19 November 2009)
+
+* Show error messages in console.
+* Use nokogiri instead of hpricot for testing.
 
 0.3.6 (3 November 2009)
 

@@ -207,9 +207,10 @@ describe 'Controller' do
   describe 'getting /' do
     describe 'on the fakettp host' do
       before do
-        expectation_1 = stub :expectation, :id => 1, :status => 'pass', :contents => 'foo'
-        expectation_2 = stub :expectation, :id => 2, :status => 'fail', :contents => 'bar'
-        expectation_3 = stub :expectation, :id => 3, :status => 'pending', :contents => 'baz'
+        error = Fakettp::Error.new :message => 'Oh noes!'
+        expectation_1 = stub :expectation, :id => 1, :status => 'pass', :contents => 'foo', :errors => []
+        expectation_2 = stub :expectation, :id => 2, :status => 'fail', :contents => 'bar', :errors => [error]
+        expectation_3 = stub :expectation, :id => 3, :status => 'pending', :contents => 'baz', :errors => []
         Fakettp::Expectation.stub!(:all).and_return [expectation_1, expectation_2, expectation_3]
       end
 
@@ -254,6 +255,11 @@ describe 'Controller' do
         it "sets the request div class to 'request fail'" do
           do_get
           (@response_doc/"//body/div[2]/@class").to_s.should == 'request fail'
+        end
+
+        it 'renders the error message' do
+          do_get
+          (@response_doc/"//body/div[2]/div[@class='error']/pre").inner_html.should == 'Oh noes!'
         end
       end
 

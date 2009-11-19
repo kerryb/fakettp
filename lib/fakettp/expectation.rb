@@ -3,6 +3,7 @@ require 'fakettp/db'
 module Fakettp
   class Expectation < ActiveRecord::Base
     set_table_name :expectations
+    # TODO Why has_many? There can be only one!
     has_many :errors
 
     class Error < StandardError
