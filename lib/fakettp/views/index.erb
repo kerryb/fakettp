@@ -5,9 +5,11 @@
   </head>
   <body>
     <% @expectations.each_with_index do |expectation, index| %>
-      <h1><%= index + 1 %></h1>
-      <div class="expectation">
-        <pre><%= expectation.render %></pre>
+      <div class="request <%= expectation.status %>">
+        <h1><%= index + 1 %></h1>
+        <div class="expectation">
+        <pre><%= expectation.contents %></pre>
+        </div>
       </div>
     <% end %>
   </body>

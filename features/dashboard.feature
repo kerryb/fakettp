@@ -15,7 +15,7 @@ Feature: Dashboard for debugging failures
     And we expect get_root
     When we get / on fakettp.local
     Then //h1[1] in the response should be '1'
-    And //div[1]/pre in the response should be:
+    And //div[1]/div/pre in the response should be:
       """
       expect "GET /" do
         request.path_info.should == '/'
@@ -30,9 +30,9 @@ Feature: Dashboard for debugging failures
     And we get / on foo.fakettp.fake.local
     And we get /foo on foo.fakettp.fake.local
     When we get / on fakettp.local
-    Then //div[1]/pre/span/@class in the response should be 'pass'
-    Then //div[2]/pre/span/@class in the response should be 'fail'
-    Then //div[3]/pre/span/@class in the response should be ''
+    Then //body/div[1]/@class in the response should be 'request pass'
+    Then //body/div[2]/@class in the response should be 'request fail'
+    Then //body/div[3]/@class in the response should be 'request pending'
 
   @wip
   Scenario: Highlight passed and failed lines
@@ -40,7 +40,7 @@ Feature: Dashboard for debugging failures
     And we expect pass_and_fail
     And we get / on foo.fakettp.fake.local
     When we get / on fakettp.local
-    Then //div[1]/pre in the response should be:
+    Then //div/div/pre[@class='expectation'] in the response should be:
       """
       <span class="pass">expect "pass and fail" do
         (2 + 2).should == 4</span>

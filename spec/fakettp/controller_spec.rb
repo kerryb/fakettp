@@ -1,5 +1,5 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
-require 'hpricot'
+require 'nokogiri'
 
 describe 'Controller' do
   include Rack::Test::Methods
@@ -7,7 +7,7 @@ describe 'Controller' do
   def app
     Sinatra::Application
   end
-  
+
   before :all do
     @host = YAML.load(File.read(FAKETTP_BASE + '/fakettp.yml'))['hostname']
   end
@@ -15,11 +15,11 @@ describe 'Controller' do
   before do
     Fakettp::Simulator.reset
   end
-  
+
   it 'mixes in Fakettp::ExpectationHelper' do
     Sinatra::Application.included_modules.should include(Fakettp::ExpectationHelper)
   end
-  
+
   describe 'posting to /reset' do
     before do
       Fakettp::Simulator.stub! :reset
@@ -50,7 +50,7 @@ describe 'Controller' do
         last_response.body.should == "Reset OK\n"
       end
     end
-    
+
     describe 'on another host' do
       it 'acts like any other simulated request' do
         post '/reset', nil, 'HTTP_HOST' => 'foo.fake.local'
@@ -90,7 +90,7 @@ describe 'Controller' do
         last_response.body.should == "Expect OK\n"
       end
     end
-    
+
     describe 'on another host' do
       it 'acts like any other simulated request' do
         post '/expect', @body, 'HTTP_HOST' => 'foo.fake.local'
@@ -195,7 +195,7 @@ describe 'Controller' do
         end
       end
     end
-    
+
     describe 'on another host' do
       it 'acts like any other simulated request' do
         get '/verify', nil, 'HTTP_HOST' => 'foo.fake.local'
@@ -207,44 +207,64 @@ describe 'Controller' do
   describe 'getting /' do
     describe 'on the fakettp host' do
       before do
-        expectation_1 = stub :expectation, :id => 1, :render => 'foo'
-        expectation_2 = stub :expectation, :id => 2, :render => 'bar'
-        Fakettp::Expectation.stub!(:all).and_return [expectation_1, expectation_2]
+        expectation_1 = stub :expectation, :id => 1, :status => 'pass', :contents => 'foo'
+        expectation_2 = stub :expectation, :id => 2, :status => 'fail', :contents => 'bar'
+        expectation_3 = stub :expectation, :id => 3, :status => 'pending', :contents => 'baz'
+        Fakettp::Expectation.stub!(:all).and_return [expectation_1, expectation_2, expectation_3]
       end
-      
+
       def do_get
         get '/', nil, 'HTTP_HOST' => @host
-        @response_doc = Hpricot(last_response.body)
+        @response_doc = Nokogiri::XML(last_response.body)
       end
 
       it 'returns an html response' do
         do_get
         last_response.content_type.should == 'text/html'
       end
-      
+
       it 'sets the title' do
         do_get
         (@response_doc/'head/title').inner_html.should == 'FakeTTP'
       end
-      
+
       it 'renders a div for each expectation' do
         do_get
-        @response_doc.search("//div[@class='expectation']").size.should == 2
+        @response_doc.search("//div[@class='expectation']").size.should == 3
       end
-      
+
       it 'numbers the expectations' do
         do_get
-        (@response_doc/"//h1[1]").inner_html.should == '1'
-        (@response_doc/"//h1[2]").inner_html.should == '2'
+        (@response_doc/"//div/h1").map(&:inner_html).should == %w(1 2 3)
       end
-      
+
       it 'displays the expectation contents' do
         do_get
-        (@response_doc/"//div[@class='expectation'][1]/pre").inner_html.should == 'foo'
-        (@response_doc/"//div[@class='expectation'][2]/pre").inner_html.should == 'bar'
+        (@response_doc/"//div[@class='expectation']/pre").map(&:inner_html).should == %w(foo bar baz)
+      end
+
+      describe 'for passed expectations' do
+        it "sets the request div class to 'request pass'" do
+          do_get
+          (@response_doc/"//body/div[1]/@class").to_s.should == 'request pass'
+        end
+      end
+
+      describe 'for failed expectations' do
+        it "sets the request div class to 'request fail'" do
+          do_get
+          (@response_doc/"//body/div[2]/@class").to_s.should == 'request fail'
+        end
+      end
+
+      describe 'for pending expectations' do
+        it "sets the request div class to 'request pending'" do
+          do_get
+          (@response_doc/"//body/div[3]/@class").to_s.should == 'request pending'
+        end
       end
     end
-    
+
     describe 'on another host' do
       it 'acts like any other simulated request' do
         get '/', nil, 'HTTP_HOST' => 'foo.fake.local'
