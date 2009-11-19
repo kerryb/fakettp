@@ -4,7 +4,7 @@ module Fakettp
       def initialize args
         @args = args
       end
-  
+
       def run
         command = @args[0]
         return usage unless command
@@ -15,9 +15,9 @@ module Fakettp
           return usage
         end
       end
-  
+
       private
-      
+
       def install
         @directory, @hostname = @args[1..2]
         return usage unless @directory && @hostname
@@ -30,7 +30,7 @@ module Fakettp
         create_database
         return 0
       end
-  
+
       def copy_files
         FileUtils.mkdir_p @directory + '/tmp', :mode => 0777
         FileUtils.mkdir_p @directory + '/public'

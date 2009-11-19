@@ -5,10 +5,10 @@ describe Fakettp::ExpectationHelper do
     class Foo
       include Fakettp::ExpectationHelper
     end
-    
+
     Foo.included_modules.should include(Spec::Matchers)
   end
-  
+
   describe 'calling expect' do
     describe 'when a matcher exception occurs' do
       it 'raises an exception' do
@@ -20,7 +20,7 @@ describe Fakettp::ExpectationHelper do
             /Error in foo: expected: 2,\s*got: 1/)
       end
     end
-    
+
     describe 'when the block returns a value' do
       it 'returns the value' do
         result = Fakettp::ExpectationHelper.expect 'foo' do

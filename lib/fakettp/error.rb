@@ -1,7 +1,7 @@
 module Fakettp
   class Error < ActiveRecord::Base
     belongs_to :expectation
-        
+
     def self.list
       errors = Error.all
       return '' if errors.empty?
