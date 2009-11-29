@@ -23,17 +23,7 @@ It also depends on the <tt>sqlite3-ruby</tt>, <tt>activerecord</tt> and
 
 === Install the gem
 
-Add GemCutter as a gem source (you only need to do this once):
-
-  gem sources -a http://gemcutter.org
-
-Then install FakeTTP:
-
   sudo gem install fakettp
-
-Alternatively, you can specify the source when you install the gem:
-
-  sudo gem install fakettp --source http://gemcutter.org
 
 === Create a FakeTTP directory
 
