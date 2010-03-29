@@ -18,6 +18,7 @@ begin
     gem.add_dependency 'sinatra', '0.9.4'
     gem.add_dependency 'sqlite3-ruby', '1.2.5'
     gem.add_dependency 'activerecord', '2.3.4'
+    gem.add_dependency 'activesupport', '2.3.4'
     gem.add_dependency 'rspec'
     gem.add_development_dependency 'jeweler'
     gem.add_development_dependency 'rcov'

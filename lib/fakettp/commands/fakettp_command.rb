@@ -1,3 +1,6 @@
+require 'fileutils'
+require 'active_support'
+
 module Fakettp
   module Commands
     class FakettpCommand
