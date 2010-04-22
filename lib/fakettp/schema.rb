@@ -1,3 +1,7 @@
+# Sorry, but can't get it to work without this.
+# http://github.com/kerryb/fakettp/issues#issue/2
+require 'rubygems'
+
 require File.dirname(__FILE__) + '/db'
 
 ActiveRecord::Schema.define do
